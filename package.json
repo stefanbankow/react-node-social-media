@@ -28,10 +28,12 @@
   "scripts": {
     "start": "react-scripts start",
     "server": "cd backend && npm run dev",
+    "server-no-env": "cd backend && npm run dev-no-env",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently --kill-others-on-fail \"npm start\" \"npm run server\""
+    "dev": "concurrently --kill-others-on-fail \"npm start\" \"npm run server\"",
+    "dev-no-env": "concurrently --kill-others-on-fail \"npm start\" \"npm run server-no-env\""
   },
   "eslintConfig": {
     "extends": "react-app"
