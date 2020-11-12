@@ -1,19 +1,17 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
+const jwtSecret = process.env.JWT_SECRET || "secret";
+
 const auth = async (req, res, next) => {
   try {
     const token = req.cookies.jwt_access;
-    const decodedToken = jwt.verify(
-      token,
-      process.env.JWT_SECRET,
-      (err, decodedToken) => {
-        if (err) {
-          throw new Error("Token expired");
-        }
-        return decodedToken;
+    const decodedToken = jwt.verify(token, jwtSecret, (err, decodedToken) => {
+      if (err) {
+        throw new Error("Token expired");
       }
-    );
+      return decodedToken;
+    });
 
     const user = await User.findOne({
       _id: decodedToken._id,

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGO_URL, {
+const mongoUrl =
+  process.env.MONGO_URL || "mongodb://localhost:27017/social-media-rest-react";
+mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

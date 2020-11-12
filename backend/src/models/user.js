@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
 
+const jwtSecret = process.env.JWT_SECRET || "secret";
+
 const UserSchema = new mongoose.Schema(
   {
     username: {
@@ -93,7 +95,7 @@ UserSchema.methods.toJSON = function () {
 UserSchema.methods.generateAuthToken = async function () {
   const token = jwt.sign(
     { _id: this._id, username: this.username },
-    process.env.JWT_SECRET,
+    jwtSecret,
     { expiresIn: 100000 }
   );
   this.tokens.push({ token });
