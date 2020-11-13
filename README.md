@@ -26,26 +26,26 @@ Run npm install in the root directory:
 npm install
 ```
 
-Go to the backend directory and there run npm install once again:
-```
-cd backend/
-npm install
-cd ..
-```
-This is really annoying and will probably be changed in the future, but due to the way the project is currently structured it's the simplest way to install both front-end and back-end dependencies.
-
 Make sure your mongoDB server is running and then run:
 
 ```
 npm run dev-no-env
 ```
 
+If for some reason the project isn't working, you can try running these commands. 
+```
+cd backend/
+npm install
+cd ..
+```
+
+
 ### Optional:
 The project is set up to use environment variables:
 - MONGO_URL
 - JWT_SECRET
 
-In order to use your own values, create a file named `dev.env` in the folder `react-node-social-media/backend/config` and then run:
+In order to use your own values, create a file named `dev.env` in the folder `react-node-social-media/backend/config`, give them values and then run:
 ```
 npm run dev
 ```
@@ -79,6 +79,7 @@ It's possible that I am missing some, but those are the major ones.
   - Change password with old password
 
 ### To do
+- Set up test for both the front- and back-end
 - Notifications
 - Likes
 - Profile pictures
