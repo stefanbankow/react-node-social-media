@@ -64,9 +64,9 @@ const NewPostForm = (props) => {
   });
   const [isPublic, setIsPublic] = useState(true);
 
-  const { closeForm, onCancel } = props;
+  const { closeForm, closeDraftForm, onCancel } = props;
   useEffect(() => {
-    if (closeForm) {
+    if (closeForm || closeDraftForm) {
       setPostFormInputs({
         title: "",
         content: "",
@@ -75,7 +75,7 @@ const NewPostForm = (props) => {
     }
 
     //ESLing warns me about not including onCancel in the dependencies, but including it causes an infinite loop, which I'm not sure how to fix
-  }, [closeForm, onCancel]);
+  }, [closeForm, closeDraftForm, onCancel]);
 
   const handlePublicChange = () => {
     setIsPublic((prevState) => !prevState);
@@ -89,7 +89,11 @@ const NewPostForm = (props) => {
   };
 
   const handlePostButtonClicked = () => {
-    props.onCreatePost({ ...postFormInputs, public: isPublic });
+    if (isPublic) {
+      props.onCreatePost({ ...postFormInputs });
+    } else {
+      props.onCreateDraft({ ...postFormInputs });
+    }
   };
 
   const createPostCard = (
@@ -195,12 +199,14 @@ const mapStateToProps = (state) => {
     postIsLoading: state.posts.isLoading,
     errors: state.posts.errors,
     closeForm: state.posts.closeForm,
+    closeDraftForm: state.drafts.closeForm,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onCreatePost: (postData) => dispatch(actions.createPostAsync(postData)),
+    onCreateDraft: (draftData) => dispatch(actions.createDraftAsync(draftData)),
   };
 };
 

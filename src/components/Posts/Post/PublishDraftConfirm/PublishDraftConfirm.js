@@ -8,25 +8,20 @@ import {
   Button,
   CircularProgress,
 } from "@material-ui/core";
-import { deletePostAsync } from "../../../../store/actions/index";
 import * as actions from "../../../../store/actions/index";
 import { connect } from "react-redux";
 
-const DeletePostConfirm = (props) => {
-  const handlePostDelete = () => {
-    props.onPostDelete(props.postId);
-  };
-  const handleDraftDelete = () => {
-    props.onDraftDelete(props.postId);
+const PublishDraftConfirm = (props) => {
+  const handleDraftPublish = () => {
+    props.onDraftPublish(props.postId);
   };
   return (
     <div>
       <Dialog open={props.dialogOpen} onClose={props.handleClose}>
-        <DialogTitle>Are you sure you want to delete this post?</DialogTitle>
+        <DialogTitle>Are you sure you want to publish this post?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This process is irreversible, once you delete a post, it cannot be
-            recovered.
+            Publishing lets every user see the post and comment on it.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -34,11 +29,11 @@ const DeletePostConfirm = (props) => {
             <CircularProgress />
           ) : (
             <Button
-              onClick={props.isDraft ? handleDraftDelete : handlePostDelete}
+              onClick={handleDraftPublish}
               variant="contained"
               color="primary"
             >
-              Delete
+              Publish
             </Button>
           )}
 
@@ -60,9 +55,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onPostDelete: (postId) => dispatch(deletePostAsync(postId)),
-    onDraftDelete: (draftId) => dispatch(actions.deleteDraftAsync(draftId)),
+    onDraftPublish: (draftId) => dispatch(actions.publishDraftAsync(draftId)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeletePostConfirm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PublishDraftConfirm);

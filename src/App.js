@@ -11,6 +11,8 @@ import { connect } from "react-redux";
 import { checkAuthAsync } from "./store/actions/index";
 import { useEffect } from "react";
 import UserProfile from "./containers/UserProfile/UserProfile";
+import DraftsPage from "./containers/DraftsPage/DraftsPage";
+import NotFoundPage from "./containers/NotFoundPage/NotFoundPage";
 
 const muiTheme = createMuiTheme({
   palette: {
@@ -34,19 +36,21 @@ function App(props) {
   useEffect(() => {
     onRefresh();
   }, [onRefresh]);
+
   return (
     <ThemeProvider theme={muiTheme}>
-      {/*Here a Route is used because otherwise the links inside would not be able to pass down the
+      {/*Here a Route is used to render the Navbar because otherwise the links inside would not be able to pass down the
       location pathname as props.location.state */}
       <Route path="/" component={NavbarLayout} />
 
       <Switch>
-        <Route path="/signup" component={SignupForm} />
-        <Route path="/login" component={LoginForm} />
-        <Route path="/test" render={() => <h1>Test page</h1>} />
-        <Route path="/:username" component={UserProfile} />
-
+        <Route exact path="/signup" component={SignupForm} />
+        <Route exact path="/login" component={LoginForm} />
+        <Route exact path="/test" render={() => <h1>Test page</h1>} />
+        <Route exact path="/drafts" component={DraftsPage} />
+        <Route path="/users/:username" component={UserProfile} />
         <Route exact path="/" component={HomePage} />
+        <Route component={NotFoundPage} />
       </Switch>
     </ThemeProvider>
   );

@@ -37,6 +37,7 @@ const Posts = (props) => {
     <div style={{ margin: "auto", textAlign: "center", width: "95%" }}>
       {props.posts.map((post) => (
         <Post
+          isDraft={props.areDrafts}
           key={post._id}
           id={post._id}
           title={post.title}
@@ -49,7 +50,8 @@ const Posts = (props) => {
       ))}
       {props.posts && props.posts.length === 0 && (
         <Typography className={classes.noPostsText} variant="h6">
-          Sorry, there are no posts to display at this time
+          Sorry, there are no {props.areDrafts ? "drafts" : "posts"} to display
+          at this time
         </Typography>
       )}
     </div>

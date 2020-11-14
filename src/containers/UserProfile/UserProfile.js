@@ -13,6 +13,8 @@ import { getUserProfileAsync } from "../../store/actions/index";
 import NewPost from "../../components/Posts/NewPost/NewPost";
 import About from "../../components/Auth/User/About/About";
 import UserSettings from "../../components/Auth/User/UserSettings/UserSettings";
+import withError from "../../hoc/withError/withError";
+import Axios from "axios";
 
 const useStyles = makeStyles(() => ({
   grow: {
@@ -92,11 +94,11 @@ const UserProfile = (props) => {
             )}
           </div>
           <Grid container>
-            <Grid item sm={2} />
-            <Grid item sm={8}>
+            <Grid item sm />
+            <Grid style={{ flexGrow: 1 }} item sm={8}>
               <Posts user={props.user} posts={props.user.posts} />
             </Grid>
-            <Grid item sm={2} />
+            <Grid item sm />
           </Grid>
           {props.user._id === props.authUserId && <NewPost />}
         </div>
@@ -125,4 +127,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withError(UserProfile, Axios));

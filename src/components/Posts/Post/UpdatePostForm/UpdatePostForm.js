@@ -1,5 +1,4 @@
 import {
-  Card,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -13,6 +12,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { updatePostAsync } from "../../../../store/actions";
+import * as actions from "../../../../store/actions/index";
 
 const useStyles = makeStyles({
   input: {
@@ -55,6 +55,13 @@ const UpdatePostForm = (props) => {
     props.onPostUpdate(props.postId, postData);
   };
 
+  const handleUpdateDraft = () => {
+    const postData = {
+      ...formInputs,
+    };
+    props.onDraftUpdate(props.postId, postData);
+  };
+
   return (
     <div>
       <Dialog
@@ -87,27 +94,40 @@ const UpdatePostForm = (props) => {
               name="content"
             />
           </div>
-          <div>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  color="primary"
-                  checked={publicState}
-                  onChange={handleCheckboxChange}
-                />
-              }
-              label="Public"
-            />
-          </div>
+          {!props.isDraft && (
+            <div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    color="primary"
+                    checked={publicState}
+                    onChange={handleCheckboxChange}
+                  />
+                }
+                label="Public"
+              />
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={handleUpdatePost}
-            variant="contained"
-            color="primary"
-          >
-            Update
-          </Button>
+          {props.isDraft ? (
+            <Button
+              onClick={handleUpdateDraft}
+              variant="contained"
+              color="primary"
+            >
+              Save
+            </Button>
+          ) : (
+            <Button
+              onClick={handleUpdatePost}
+              variant="contained"
+              color="primary"
+            >
+              Update
+            </Button>
+          )}
+
           <Button variant="contained" onClick={props.handleClose}>
             Close
           </Button>
@@ -127,6 +147,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onPostUpdate: (postId, postData) =>
       dispatch(updatePostAsync(postId, postData)),
+    onDraftUpdate: (draftId, reqBody) =>
+      dispatch(actions.updateDraftAsync(draftId, reqBody)),
   };
 };
 

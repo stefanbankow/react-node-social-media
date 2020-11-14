@@ -68,15 +68,26 @@ npm run dev
 It's possible that I am missing some, but those are the major ones.
 
 ## Features
+
+### Note
+The way the post and comment systems are currently set up, the performance of the site degrades gradually as more and more posts/comments are added.
+I plan on refactoring in order to send only a limited amount of posts/comments with each request and then request more based on user actions (scrolling to the end of current page)
+
 ### Currently available
 - Posts
   - CRUD functionality
+  - Drafts
+    - Posts which are created with the `Public` checkbox ticked off are added to the drafts instead.
+    - The drafts can be accessed at `/drafts`
+    - The user can then choose to `publish`, `edit`, or `delete` a draft.
 - Comments
   - CRUD functionality
 - User system
-  - Sign in / Sign up
+  - Authentication
+    - Authentication based on JWT tokens stored inside cookies and in the Database
+    - This is by no means neither very complicated, nor very secure system, but it suits my needs
   - Edit about info (has more work to be done)
-  - Change password with old password
+  - Change password by providing old password
 
 ### To do
 - Set up test for both the front- and back-end
@@ -86,5 +97,6 @@ It's possible that I am missing some, but those are the major ones.
 
 ### Backlog
 - Email verification
+  
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)

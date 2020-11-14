@@ -6,9 +6,10 @@ const jwtSecret = process.env.JWT_SECRET || "secret";
 const auth = async (req, res, next) => {
   try {
     const token = req.cookies.jwt_access;
+
     const decodedToken = jwt.verify(token, jwtSecret, (err, decodedToken) => {
       if (err) {
-        throw new Error("Token expired");
+        throw err;
       }
       return decodedToken;
     });

@@ -79,14 +79,14 @@ const Comment = (props) => {
       />
       <CardHeader
         avatar={
-          <Link className={classes.usernameLink} to={`/${props.author}`}>
+          <Link className={classes.usernameLink} to={`/users/${props.author}`}>
             <Avatar aria-label="user" className={classes.avatar}>
               P
             </Avatar>{" "}
           </Link>
         }
         title={
-          <Link className={classes.usernameLink} to={`/${props.author}`}>
+          <Link className={classes.usernameLink} to={`/users/${props.author}`}>
             {props.author}
           </Link>
         }

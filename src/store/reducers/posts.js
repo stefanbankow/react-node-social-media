@@ -30,20 +30,13 @@ const postReducer = (state = initialState, action) => {
       };
 
     case actionTypes.CREATE_POST_SUCCESS:
-      return action.post.public
-        ? {
-            ...state,
-            posts: [action.post, ...state.posts],
-            errors: {},
-            isLoading: false,
-            closeForm: true,
-          }
-        : {
-            ...state,
-            errors: {},
-            isLoading: false,
-            closeForm: true,
-          };
+      return {
+        ...state,
+        posts: [action.post, ...state.posts],
+        isLoading: false,
+        closeForm: true,
+      };
+
     case actionTypes.CREATE_POST_FAILURE:
       return {
         ...state,

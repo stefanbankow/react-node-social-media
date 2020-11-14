@@ -4,6 +4,13 @@ export {
   updateUserPasswordAsync,
 } from "./user";
 export {
+  getDraftsAsync,
+  createDraftAsync,
+  updateDraftAsync,
+  publishDraftAsync,
+  deleteDraftAsync,
+} from "./drafts";
+export {
   getPostsAsync,
   createPostAsync,
   updatePostAsync,

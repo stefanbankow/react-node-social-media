@@ -54,7 +54,9 @@ postRouter.get("/drafts", auth, async (req, res) => {
     const drafts = await Post.find({
       author: req.user._id,
       public: false,
-    }).sort({ createdAt: -1 });
+    })
+      .sort({ createdAt: -1 })
+      .populate("author");
     return res.json({ drafts });
   } catch (error) {
     console.error(error);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, fade } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -9,8 +9,9 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import DraftsIcon from "@material-ui/icons/Drafts";
 import { Link, NavLink } from "react-router-dom";
-import { colors } from "@material-ui/core";
+import { colors, Menu, MenuItem } from "@material-ui/core";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 import ButtonBase from "@material-ui/core/ButtonBase";
@@ -61,11 +62,52 @@ const useStyles = makeStyles((theme) => ({
 
 const NavbarLayout = (props) => {
   const classes = useStyles();
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+
+  const handleUserMenuOpen = (event) => {
+    setUserMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = (event) => {
+    setUserMenuAnchorEl(null);
+  };
+
+  const handleRedirectToProfile = () => {
+    props.history.push(`/users/${props.username}`);
+    setUserMenuAnchorEl(null);
+  };
+
+  const handleRedirectToDrafts = () => {
+    props.history.push("/drafts");
+    setUserMenuAnchorEl(null);
+  };
 
   const handleSignOut = () => {
     props.onSignOut();
+    setUserMenuAnchorEl(null);
     props.history.replace("/");
   };
+
+  const userMenu = (
+    <Menu
+      anchorEl={userMenuAnchorEl}
+      open={Boolean(userMenuAnchorEl)}
+      onClose={handleUserMenuClose}
+    >
+      <MenuItem onClick={handleRedirectToProfile}>
+        <AccountCircleIcon />
+        Profile
+      </MenuItem>
+      <MenuItem onClick={handleRedirectToDrafts}>
+        <DraftsIcon />
+        Drafts
+      </MenuItem>
+      <MenuItem disabled={props.isLoading} onClick={handleSignOut}>
+        <ExitToAppIcon />
+        Sign out
+      </MenuItem>
+    </Menu>
+  );
 
   const authButtons = (
     <div className={classes.authButtonsRoot}>
@@ -100,22 +142,14 @@ const NavbarLayout = (props) => {
       <IconButton size="large">
         <NotificationsIcon />
       </IconButton>
-      <Link to={`/${props.username}`}>
-        <IconButton size="large">
-          <AccountCircleIcon />
-        </IconButton>
-      </Link>
-      <IconButton
-        disabled={props.isLoading}
-        onClick={handleSignOut}
-        size="large"
-      >
-        <ExitToAppIcon />
+      {/* <Link to={`/users/${props.username}`}></Link> */}
+      <IconButton onClick={handleUserMenuOpen} size="large">
+        <AccountCircleIcon />
       </IconButton>
     </div>
   );
   return (
-    <AppBar style={{ minHeight: "20px" }} position="static">
+    <AppBar style={{ minHeight: "20px" }} position="sticky">
       <Toolbar>
         <Link
           className={classes.titleLink}
@@ -131,6 +165,7 @@ const NavbarLayout = (props) => {
         <div className={classes.grow}></div>
 
         {props.isAuthenticated ? userButtons : authButtons}
+        {userMenu}
       </Toolbar>
     </AppBar>
   );

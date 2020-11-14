@@ -1,6 +1,5 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
-import mapSignUpErrors from "../../util/mapSignUpErrors";
 
 //Used to set loading to true
 export const authUserInit = () => {
@@ -19,7 +18,9 @@ export const checkAuthAsync = () => {
           signInUserSuccess(res.data.token, res.data.userId, res.data.username)
         );
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error(err);
+      });
   };
 };
 

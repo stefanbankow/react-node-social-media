@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { Grid, CircularProgress, makeStyles } from "@material-ui/core";
 import Posts from "../../components/Posts/Posts";
-import { Grid, makeStyles, CircularProgress } from "@material-ui/core";
-import NewPost from "../../components/Posts/NewPost/NewPost";
 import { connect } from "react-redux";
-import { getPostsAsync } from "../../store/actions/index";
 import withError from "../../hoc/withError/withError";
 import axios from "axios";
-//import { Waypoint } from "react-waypoint";
+import * as actions from "../../store/actions/index";
+import { useEffect } from "react";
+import NewPost from "../../components/Posts/NewPost/NewPost";
 
 const useStyles = makeStyles({
   grow: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-const HomePage = (props) => {
+const DraftsPage = (props) => {
   const classes = useStyles();
   const { onMount } = props;
 
@@ -25,25 +25,13 @@ const HomePage = (props) => {
     onMount();
   }, [onMount]);
 
-  /*   const handleBottomReached = (e) => {
-    console.log("Bottom!");
-  };
-
-  const handleBottomLeft = (e) => {
-    console.log("No Bottom!");
-  }; */
-
   return (
     <div>
       <Grid container>
         <Grid style={{ flexGrow: 1 }} item sm={8}>
-          {props.posts ? (
+          {props.drafts ? (
             <React.Fragment>
-              <Posts posts={props.posts} />
-              {/* <Waypoint
-                onEnter={handleBottomReached}
-                onLeave={handleBottomLeft}
-              /> */}
+              <Posts posts={props.drafts} areDrafts />
             </React.Fragment>
           ) : (
             <div style={{ textAlign: "center" }}>
@@ -58,14 +46,15 @@ const HomePage = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { posts: state.posts.posts };
+  return { drafts: state.drafts.drafts };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    onMount: () => dispatch(getPostsAsync()),
+    onMount: () => dispatch(actions.getDraftsAsync()),
   };
 };
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withError(HomePage, axios));
+)(withError(DraftsPage, axios));

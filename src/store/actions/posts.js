@@ -13,6 +13,7 @@ export const closeFormReset = () => {
   };
 };
 
+//Getting posts
 export const getPostsSuccess = (posts) => {
   return {
     type: actionTypes.GET_POSTS,
@@ -33,6 +34,7 @@ export const getPostsAsync = () => {
   };
 };
 
+//Creating posts
 export const createPostSuccess = (post) => {
   return {
     type: actionTypes.CREATE_POST_SUCCESS,
@@ -51,9 +53,8 @@ export const createPostAsync = (postData) => {
   return (dispatch) => {
     dispatch(initPostRequest());
     axios
-      .post("/posts", postData)
+      .post("/posts", { ...postData, public: true })
       .then((res) => {
-        console.log("Response");
         dispatch(createPostSuccess(res.data));
         dispatch(closeFormReset());
       })
@@ -68,6 +69,7 @@ export const createPostAsync = (postData) => {
   };
 };
 
+//Updating Posts
 export const updatePostSuccess = (post) => {
   return {
     type: actionTypes.UPDATE_POST_SUCCESS,
@@ -100,6 +102,7 @@ export const updatePostAsync = (postId, postData) => {
   };
 };
 
+//Deleting posts
 export const deletePostSuccess = (deletedPostId) => {
   return {
     type: actionTypes.DELETE_POST_SUCCESS,

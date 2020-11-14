@@ -14,7 +14,7 @@ import {
   Fade,
 } from "@material-ui/core";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { Favorite } from "@material-ui/icons";
 import CommentIcon from "@material-ui/icons/Comment";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -27,6 +27,7 @@ import UpdatePostForm from "./UpdatePostForm/UpdatePostForm";
 import ReactTimeAgo from "react-time-ago";
 import Comments from "../../Comments/Comments";
 import * as actions from "../../../store/actions/index";
+import PublishDraftConfirm from "./PublishDraftConfirm/PublishDraftConfirm";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -47,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: "none",
     },
   },
+  draftButtons: {
+    display: "flex",
+    flexDirection: "column",
+  },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
@@ -59,10 +64,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*This component has slightly different design based on whether or not the post is still a draft or it is a published post.
+  This makes the code here a little convoluted at places, but I prefer this to making a separate component for a draft since
+  I would copy most of the code that is already here.
+*/
 const Post = (props) => {
   const classes = useStyles();
   const [expandedState, setExpandedState] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
+  const [confirmPublishDraftOpen, setConfirmPublishDraftOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [updatePostOpen, setUpdatePostOpen] = useState(false);
 
@@ -81,29 +91,79 @@ const Post = (props) => {
     setMenuAnchor(null);
   };
 
-  const handleConfirmDeleteOpen = () => {
-    setConfirmDeleteOpen(true);
-  };
-
-  const handleConfirmDeleteClose = () => {
-    setConfirmDeleteOpen(false);
-  };
-
   const handleUpdatePostOpen = () => {
     setUpdatePostOpen(true);
   };
-
   const handleUpdatePostClose = () => {
     setUpdatePostOpen(false);
   };
 
+  const handleConfirmPublishOpen = () => {
+    setConfirmPublishDraftOpen(true);
+  };
+  const handleConfirmPublishClose = () => {
+    setConfirmPublishDraftOpen(false);
+  };
+
+  const handleConfirmDeleteOpen = () => {
+    setConfirmDeleteOpen(true);
+  };
+  const handleConfirmDeleteClose = () => {
+    setConfirmDeleteOpen(false);
+  };
+
+  const postButtons = (
+    <React.Fragment>
+      <IconButton aria-label="like">
+        <Favorite color="primary" />
+      </IconButton>
+
+      <div className={classes.grow} />
+      <Button onClick={handleExpandComments} color="inherit">
+        {!expandedState ? "Show" : "Hide"} comments
+        <div style={{ minWidth: 7.5 }} />
+        <CommentIcon />
+        <ExpandMoreIcon
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expandedState,
+          })}
+        />
+      </Button>
+    </React.Fragment>
+  );
+
+  const draftButtons = (
+    <React.Fragment>
+      <Button
+        onClick={handleUpdatePostOpen}
+        size="small"
+        color="secondary"
+        variant="contained"
+      >
+        Edit
+      </Button>
+
+      <Button
+        onClick={handleConfirmDeleteOpen}
+        size="small"
+        variant="contained"
+      >
+        Delete
+      </Button>
+      <div className={classes.grow} />
+      <IconButton onClick={handleExpandComments}>
+        <CommentIcon />
+        <ExpandMoreIcon
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expandedState,
+          })}
+        />
+      </IconButton>
+    </React.Fragment>
+  );
+
   return (
     <div className={classes.root}>
-      <DeletePostConfirm
-        dialogOpen={confirmDeleteOpen}
-        handleClose={handleConfirmDeleteClose}
-        postId={props.id}
-      />
       <UpdatePostForm
         dialogOpen={updatePostOpen}
         handleClose={handleUpdatePostClose}
@@ -111,19 +171,37 @@ const Post = (props) => {
         postTitle={props.title}
         postContent={props.content}
         public={props.public}
+        isDraft={props.isDraft}
+      />
+      <DeletePostConfirm
+        dialogOpen={confirmDeleteOpen}
+        handleClose={handleConfirmDeleteClose}
+        postId={props.id}
+        isDraft={props.isDraft}
+      />
+      <PublishDraftConfirm
+        dialogOpen={confirmPublishDraftOpen}
+        handleClose={handleConfirmPublishClose}
+        postId={props.id}
       />
       <Slide unmountOnExit in direction="up">
         <Card>
           <CardHeader
             avatar={
-              <Link className={classes.usernameLink} to={`/${props.author}`}>
+              <Link
+                className={classes.usernameLink}
+                to={`/users/${props.author}`}
+              >
                 <Avatar aria-label="user" className={classes.avatar}>
                   P
                 </Avatar>{" "}
               </Link>
             }
             title={
-              <Link className={classes.usernameLink} to={`/${props.author}`}>
+              <Link
+                className={classes.usernameLink}
+                to={`/users/${props.author}`}
+              >
                 {props.author}
               </Link>
             }
@@ -136,7 +214,15 @@ const Post = (props) => {
             }
             //If the author of the post and the logged user match, give show the options menu, otherwise dont show anything there
             action={
-              props.authorId === props.userId ? (
+              props.isDraft ? (
+                <Button
+                  onClick={handleConfirmPublishOpen}
+                  color="primary"
+                  variant="contained"
+                >
+                  Publish
+                </Button>
+              ) : props.authorId === props.userId ? (
                 <div>
                   <IconButton onClick={handleOpenMenu}>
                     <MoreVertIcon />
@@ -165,21 +251,7 @@ const Post = (props) => {
             </Typography>
           </CardContent>
           <CardActions>
-            <IconButton aria-label="like">
-              <Favorite color="primary" />
-            </IconButton>
-            <IconButton aria-label="see comments">
-              <CommentIcon />
-            </IconButton>
-            <div className={classes.grow} />
-            <Button onClick={handleExpandComments} color="inherit">
-              {!expandedState ? "See" : "Hide"} comments
-              <ExpandMoreIcon
-                className={clsx(classes.expand, {
-                  [classes.expandOpen]: expandedState,
-                })}
-              />
-            </Button>
+            {props.isDraft ? draftButtons : postButtons}
           </CardActions>
           <Collapse in={expandedState} unmountOnExit>
             <Comments postId={props.id} />
