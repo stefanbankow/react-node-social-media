@@ -6,10 +6,12 @@ import {
   Typography,
   TextField,
   Button,
+  MenuItem,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../../../store/actions/index";
+import allCountries from "../../../../../util/allCountries";
 
 const useStyles = makeStyles({
   dialogContent: {},
@@ -25,7 +27,7 @@ const EditAbout = (props) => {
   const [formInputs, setFormInputs] = useState({
     age: user.age || "",
     about: user.about || "",
-    location: user.location || "",
+    country: user.country || "",
   });
   const [error, setError] = useState(null);
 
@@ -47,14 +49,15 @@ const EditAbout = (props) => {
   const handleUpdateUserAbout = () => {
     if (
       formInputs.age !== user.age ||
-      formInputs.location !== user.location ||
+      formInputs.country !== user.country ||
       formInputs.about !== user.about
     ) {
       const reqBody = {
         age: formInputs.age,
         about: formInputs.about,
-        location: formInputs.location,
+        country: formInputs.country,
       };
+      setError(null);
       props.onUserUpdate(reqBody);
       props.closeForm && props.handleClose();
     } else {
@@ -69,7 +72,7 @@ const EditAbout = (props) => {
           <DialogContent className={classes.dialogContent}>
             <div>
               <TextField
-                error={error}
+                error={error || Object.keys(props.errors).length > 0}
                 fullWidth
                 className={classes.input}
                 onChange={handleChange}
@@ -81,18 +84,25 @@ const EditAbout = (props) => {
             </div>
             <div>
               <TextField
-                error={error}
+                select
+                error={error || Object.keys(props.errors).length > 0}
                 fullWidth
                 className={classes.input}
                 onChange={handleChange}
-                value={formInputs.location}
-                name="location"
-                label="Location"
-              />
+                value={formInputs.country}
+                name="country"
+                label="Country"
+              >
+                {allCountries.map((country) => (
+                  <MenuItem key={country} value={country}>
+                    {country}
+                  </MenuItem>
+                ))}
+              </TextField>
             </div>
             <div>
               <TextField
-                error={error}
+                error={error || Object.keys(props.errors).length > 0}
                 fullWidth
                 className={classes.input}
                 onChange={handleChange}
@@ -104,7 +114,9 @@ const EditAbout = (props) => {
               />
             </div>
             <Typography style={{ textAlign: "center" }} color="error">
-              {error}
+              {Object.keys(props.errors).length > 0
+                ? props.errors.message
+                : error}
             </Typography>
           </DialogContent>
           <DialogActions>

@@ -99,6 +99,7 @@ export const updateDraftAsync = (draftId, reqBody) => {
       .patch(`/posts/${draftId}`, reqBody)
       .then((res) => {
         dispatch(updateDraftSuccess(res.data.updatedPost));
+        dispatch(closeFormReset());
       })
       .catch((err) => {
         console.error(err);

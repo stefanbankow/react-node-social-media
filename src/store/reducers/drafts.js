@@ -58,6 +58,7 @@ const draftsReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        closeForm: true,
         drafts: newDrafts,
       };
     case actionTypes.UPDATE_DRAFT_FAILURE:

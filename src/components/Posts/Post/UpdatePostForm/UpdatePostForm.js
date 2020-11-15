@@ -28,12 +28,12 @@ const UpdatePostForm = (props) => {
   const [publicState, setPublicState] = useState(props.public);
   const classes = useStyles();
 
-  const { closeForm, handleClose } = props;
+  const { closeForm, closeDraftForm, handleClose } = props;
   useEffect(() => {
-    if (closeForm) {
+    if (closeForm || closeDraftForm) {
       handleClose();
     }
-  }, [closeForm, handleClose]);
+  }, [closeForm, closeDraftForm, handleClose]);
 
   const handleChange = (event) => {
     //Have to set these in constants (or variables because they cant be accessed im the callback function otherwise)
@@ -140,6 +140,7 @@ const UpdatePostForm = (props) => {
 const mapStateToProps = (state) => {
   return {
     closeForm: state.posts.closeForm,
+    closeDraftForm: state.drafts.closeForm,
   };
 };
 

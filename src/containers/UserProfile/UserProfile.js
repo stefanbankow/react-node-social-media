@@ -77,7 +77,7 @@ const UserProfile = (props) => {
             <About
               dialogOpen={aboutDialogOpen}
               handleClose={handleAboutDialogClosed}
-              location={props.user.location}
+              country={props.user.country}
               age={props.user.age}
               about={props.user.about}
             />

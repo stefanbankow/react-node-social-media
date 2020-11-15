@@ -21,9 +21,9 @@ const About = (props) => {
             </Typography>
           </Typography>
           <Typography variant="h6">
-            Location:{" "}
+            Country:{" "}
             <Typography variant="body1">
-              {props.location ? props.location : "Not specified"}
+              {props.country ? props.country : "Not specified"}
             </Typography>
           </Typography>
           <Typography variant="h6">

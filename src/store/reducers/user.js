@@ -32,7 +32,7 @@ const userReducers = (state = initState, action) => {
       const userCopy = { ...state.user };
 
       userCopy.age = action.updatedUser.age;
-      userCopy.location = action.updatedUser.location;
+      userCopy.country = action.updatedUser.country;
       userCopy.about = action.updatedUser.about;
       userCopy.posts = [...state.user.posts];
 

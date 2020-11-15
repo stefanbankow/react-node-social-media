@@ -1,5 +1,6 @@
 import {
   Button,
+  MenuItem,
   CircularProgress,
   TextField,
   Typography,
@@ -12,6 +13,7 @@ import { signUpUserAsync } from "../../../store/actions/index";
 import { signUpUserFailure } from "../../../store/actions/auth";
 import mapPasswordReq from "../../../util/mapPasswordReq";
 import { Redirect } from "react-router-dom";
+import allCountries from "../../../util/allCountries";
 
 const useStyles = makeStyles({
   root: {
@@ -36,7 +38,7 @@ const SignupForm = (props) => {
     password: "",
     confirmPassword: "",
     age: "",
-    location: "",
+    country: "",
     about: "",
   });
 
@@ -148,13 +150,21 @@ const SignupForm = (props) => {
       </div>
       <div>
         <TextField
+          select
           onChange={handleChange}
           fullWidth
           type="text"
-          value={formInputs.location}
-          name="location"
-          label="Location"
-        />
+          value={formInputs.country}
+          name="country"
+          label="Country"
+          style={{ textAlign: "left" }}
+        >
+          {allCountries.map((country) => (
+            <MenuItem key={country} value={country}>
+              {country === "" ? "None" : country}
+            </MenuItem>
+          ))}
+        </TextField>
       </div>
       <div>
         <TextField

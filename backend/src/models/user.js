@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const uniqueValidator = require("mongoose-unique-validator");
+const allCountries = require("../utils/allCountries");
 
 const jwtSecret = process.env.JWT_SECRET || "secret";
 
@@ -40,8 +41,9 @@ const UserSchema = new mongoose.Schema(
       min: [13, "You must be at least 13 to use this site"],
       max: [200, "Age too large"],
     },
-    location: {
+    country: {
       type: String,
+      enum: allCountries,
     },
     tokens: [
       {

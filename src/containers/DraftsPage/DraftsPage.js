@@ -1,5 +1,10 @@
 import React from "react";
-import { Grid, CircularProgress, makeStyles } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  CircularProgress,
+  makeStyles,
+} from "@material-ui/core";
 import Posts from "../../components/Posts/Posts";
 import { connect } from "react-redux";
 import withError from "../../hoc/withError/withError";
@@ -29,6 +34,9 @@ const DraftsPage = (props) => {
     <div>
       <Grid container>
         <Grid style={{ flexGrow: 1 }} item sm={8}>
+          <Typography style={{ margin: "10px 15px" }} variant="h3">
+            Drafts
+          </Typography>
           {props.drafts ? (
             <React.Fragment>
               <Posts posts={props.drafts} areDrafts />

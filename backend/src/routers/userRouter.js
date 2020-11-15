@@ -48,7 +48,7 @@ userRouter.get("/:username", async (req, res) => {
 userRouter.patch("/", auth, async (req, res) => {
   try {
     const updates = Object.keys(req.body);
-    const allowedUpdates = ["about", "age", "location"];
+    const allowedUpdates = ["about", "age", "country"];
     const updatesToDo = updates.filter((update) => {
       return allowedUpdates.indexOf(update) >= 0;
     });
@@ -62,7 +62,7 @@ userRouter.patch("/", auth, async (req, res) => {
     return res.json({ user: req.user });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: error });
+    return res.status(400).json({ error: error });
   }
 });
 
