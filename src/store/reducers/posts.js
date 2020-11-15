@@ -30,12 +30,20 @@ const postReducer = (state = initialState, action) => {
       };
 
     case actionTypes.CREATE_POST_SUCCESS:
-      return {
-        ...state,
-        posts: [action.post, ...state.posts],
-        isLoading: false,
-        closeForm: true,
-      };
+      if (state.posts) {
+        return {
+          ...state,
+          posts: [action.post, ...state.posts],
+          isLoading: false,
+          closeForm: true,
+        };
+      } else {
+        return {
+          ...state,
+          isLoading: false,
+          closeForm: true,
+        };
+      }
 
     case actionTypes.CREATE_POST_FAILURE:
       return {
@@ -45,11 +53,16 @@ const postReducer = (state = initialState, action) => {
       };
 
     case actionTypes.UPDATE_POST_SUCCESS:
-      const newPosts = state.posts.map((post) =>
-        action.post.id === post.id ? action.post : post
-      );
-      console.log(action.post);
-      console.log(newPosts);
+      let newPosts;
+      //Updates the fields of the post if it is still public and removes it from the array otherwise, because then it belongs to the drafts
+      if (action.post.public) {
+        newPosts = state.posts.map((post) =>
+          action.post.id === post.id ? action.post : post
+        );
+      } else {
+        newPosts = state.posts.filter((post) => action.post.id !== post.id);
+      }
+
       return {
         ...state,
         posts: newPosts,

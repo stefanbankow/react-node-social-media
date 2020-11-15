@@ -6,6 +6,11 @@ It has a dedicated REST API, created with Express.js, which is situated in the `
 
 The features currently available are pretty basic, but I hope I have the time and energy to add some more advanced ones.
 
+## Demo
+
+I do not have a public production build set up and don't plan on making one anytime soon, so I decided to record a little video showcasing some of the features of the project.
+ ### [Watch showcase here](https://www.youtube.com/watch?v=1NgSvF1UU8Q&feature=youtu.be&ab_channel=Bankov)
+
 
 
 ## Installation

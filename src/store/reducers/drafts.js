@@ -36,12 +36,20 @@ const draftsReducer = (state = initialState, action) => {
       };
     //Creating
     case actionTypes.CREATE_DRAFT_SUCCESS:
-      return {
-        ...state,
-        drafts: [action.draft, ...state.drafts],
-        isLoading: false,
-        closeForm: true,
-      };
+      if (state.drafts) {
+        return {
+          ...state,
+          drafts: [action.draft, ...state.drafts],
+          isLoading: false,
+          closeForm: true,
+        };
+      } else {
+        return {
+          ...state,
+          isLoading: false,
+          closeForm: true,
+        };
+      }
 
     case actionTypes.CREATE_DRAFT_FAILURE:
       return {

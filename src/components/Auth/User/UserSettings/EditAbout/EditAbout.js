@@ -72,7 +72,12 @@ const EditAbout = (props) => {
           <DialogContent className={classes.dialogContent}>
             <div>
               <TextField
-                error={error || Object.keys(props.errors).length > 0}
+                error={
+                  error ||
+                  (props.errors && props.errors.age) ||
+                  Object.keys(props.errors).length > 0
+                }
+                helperText={props.errors.age && props.errors.age.message}
                 fullWidth
                 className={classes.input}
                 onChange={handleChange}
@@ -95,7 +100,7 @@ const EditAbout = (props) => {
               >
                 {allCountries.map((country) => (
                   <MenuItem key={country} value={country}>
-                    {country}
+                    {country === "" ? "None" : country}
                   </MenuItem>
                 ))}
               </TextField>

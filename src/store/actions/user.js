@@ -79,7 +79,9 @@ export const updateUserAboutAsync = (reqBody) => {
       .catch((err) => {
         console.error(err);
         dispatch(
-          updateUserAboutFailure(err.response ? err.response.data.error : err)
+          updateUserAboutFailure(
+            err.response ? err.response.data.error.errors : err
+          )
         );
       });
   };
