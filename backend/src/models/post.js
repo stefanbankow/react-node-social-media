@@ -1,6 +1,4 @@
 const mongoose = require("../db/mongoose");
-const User = require("./user");
-const CommentOnPost = require("./comment");
 
 const PostSchema = new mongoose.Schema(
   {
@@ -40,21 +38,17 @@ PostSchema.virtual("comments", {
   foreignField: "onPost",
 });
 
-PostSchema.virtual("lastComment", {
-  ref: "Comment",
-  localField: "_id",
-  foreignField: "onPost",
-  justOne: true,
-  options: {
-    sort: { postedOn: -1 },
-  },
-});
-
 PostSchema.virtual("commentCount", {
   ref: "Comment",
   localField: "_id",
   foreignField: "onPost",
   count: true,
+});
+
+PostSchema.virtual("likes", {
+  ref: "Like",
+  localField: "_id",
+  foreignField: "onPost",
 });
 
 const Post = mongoose.model("Post", PostSchema);

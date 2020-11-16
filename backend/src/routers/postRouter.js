@@ -1,12 +1,15 @@
 const express = require("express");
 const auth = require("../middleware/auth");
 const CommentOnPost = require("../models/comment");
+const Like = require("../models/like");
 const Post = require("../models/post");
 const commentRouter = require("./commentRouter");
+const likeRouter = require("./likeRouter");
 
 const postRouter = express.Router();
 
 postRouter.use("/:postId/comments", commentRouter);
+postRouter.use("/:postId/likes", likeRouter);
 
 postRouter.post("/", auth, async (req, res) => {
   try {
@@ -33,8 +36,13 @@ postRouter.get("/", async (req, res) => {
     const posts = await Post.find({ public: true })
       .sort({ createdAt: -1 })
       .populate("author")
-      .populate("lastComment")
-      .populate("commentCount");
+      //Not sure if the sort is required, but I'm using it just in case
+      .populate({
+        path: "likes",
+        select: "by",
+        options: { sort: { createdAt: 1 } },
+      });
+
     return res.json({ posts });
   } catch (error) {
     console.error(error);
@@ -132,9 +140,13 @@ postRouter.delete("/:id", auth, async (req, res) => {
       onPost: postToDelete._id,
     });
 
-    return res
-      .status(204)
-      .json({ deletedPost: postToDelete, deletedComments: commentsToDelete });
+    const likesToDelete = await Like.deleteMany({ onPost: postToDelete._id });
+
+    return res.status(204).json({
+      deletedPost: postToDelete,
+      deletedComments: commentsToDelete,
+      deletedLikes: likesToDelete,
+    });
   } catch (error) {
     return res.status(500).json({ error });
   }
