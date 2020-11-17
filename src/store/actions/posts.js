@@ -7,6 +7,12 @@ export const initPostRequest = () => {
   };
 };
 
+export const postsReset = () => {
+  return {
+    type: actionTypes.POSTS_RESET,
+  };
+};
+
 export const closeFormReset = () => {
   return {
     type: actionTypes.CLOSE_POST_FORM_RESET,

@@ -18,6 +18,11 @@ const postReducer = (state = initialState, action) => {
         closeForm: false,
         errors: {},
       };
+    case actionTypes.POSTS_RESET:
+      return {
+        ...state,
+        posts: null,
+      };
     case actionTypes.LIKE_REQUEST_INIT:
       return {
         ...state,

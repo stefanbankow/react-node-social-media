@@ -3,7 +3,7 @@ import Posts from "../../components/Posts/Posts";
 import { Grid, makeStyles, CircularProgress } from "@material-ui/core";
 import NewPost from "../../components/Posts/NewPost/NewPost";
 import { connect } from "react-redux";
-import { getPostsAsync } from "../../store/actions/index";
+import * as actions from "../../store/actions/index";
 import withError from "../../hoc/withError/withError";
 import axios from "axios";
 //import { Waypoint } from "react-waypoint";
@@ -19,11 +19,13 @@ const useStyles = makeStyles({
 
 const HomePage = (props) => {
   const classes = useStyles();
-  const { onMount } = props;
+
+  const { onMount, postsReset } = props;
 
   useEffect(() => {
+    postsReset();
     onMount();
-  }, [onMount]);
+  }, [onMount, postsReset]);
 
   /*   const handleBottomReached = (e) => {
     console.log("Bottom!");
@@ -62,7 +64,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    onMount: () => dispatch(getPostsAsync()),
+    onMount: () => dispatch(actions.getPostsAsync()),
+    postsReset: () => dispatch(actions.postsReset()),
   };
 };
 export default connect(

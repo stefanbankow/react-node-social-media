@@ -11,6 +11,7 @@ export {
   deleteDraftAsync,
 } from "./drafts";
 export {
+  postsReset,
   getPostsAsync,
   createPostAsync,
   updatePostAsync,

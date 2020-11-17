@@ -21,7 +21,9 @@ const LikesDialog = (props) => {
         <DialogTitle>Likes</DialogTitle>
         <DialogContent>
           {props.likes.length === 0 ? (
-            <DialogContentText>There are no likes yet</DialogContentText>
+            <DialogContentText>
+              There are no likes yet, be the first one to like this!
+            </DialogContentText>
           ) : (
             <List>
               {props.likes.map((like) => (

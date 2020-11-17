@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import Posts from "../../components/Posts/Posts";
 import { connect } from "react-redux";
-import { getUserProfileAsync } from "../../store/actions/index";
+import { getUserProfileAsync, postsReset } from "../../store/actions/index";
 import NewPost from "../../components/Posts/NewPost/NewPost";
 import About from "../../components/Auth/User/About/About";
 import UserSettings from "../../components/Auth/User/UserSettings/UserSettings";
@@ -37,14 +37,15 @@ const useStyles = makeStyles(() => ({
 }));
 const UserProfile = (props) => {
   const classes = useStyles();
-  const { onMount, user, posts } = props;
+  const { onMount, postsReset } = props;
   const { username } = props.match.params;
   const [aboutDialogOpen, setAboutDialogOpen] = useState(false);
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
 
   useEffect(() => {
+    postsReset();
     onMount(username);
-  }, [onMount, posts, username]);
+  }, [onMount, postsReset, username]);
 
   const handleAboutDialogOpen = () => {
     setAboutDialogOpen(true);
@@ -96,7 +97,11 @@ const UserProfile = (props) => {
           <Grid container>
             <Grid item sm />
             <Grid style={{ flexGrow: 1 }} item sm={8}>
-              <Posts user={props.user} posts={props.user.posts} />
+              {props.posts ? (
+                <Posts areUserPosts user={props.user} posts={props.posts} />
+              ) : (
+                <CircularProgress />
+              )}
             </Grid>
             <Grid item sm />
           </Grid>
@@ -124,6 +129,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onMount: (username) => dispatch(getUserProfileAsync(username)),
+    postsReset: () => dispatch(postsReset()),
   };
 };
 

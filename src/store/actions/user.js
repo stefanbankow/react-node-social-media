@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as actionTypes from "./actionTypes";
+import { getPostsSuccess } from "./posts";
 
 export const userRequestInit = () => {
   return {
@@ -39,6 +40,8 @@ export const getUserProfileAsync = (username) => {
       .get(`/users/${username}`)
       .then((res) => {
         dispatch(getUserProfileSuccess(res.data.user));
+        //Setting the "posts" state as the posts of the user as to update them properly
+        dispatch(getPostsSuccess(res.data.user.posts));
       })
       .catch((error) => {
         console.error(error);
