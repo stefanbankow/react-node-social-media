@@ -74,7 +74,11 @@ const withError = (WrappedComponent, axios) => {
     render() {
       return (
         <div>
-          <Dialog open={this.state.error} onClose={this.handleConfirmError}>
+          <Dialog
+            //Using Boolean() in order to comply with propTypes
+            open={Boolean(this.state.error)}
+            onClose={this.handleConfirmError}
+          >
             <DialogTitle>
               {this.state.error && this.state.error.code}
             </DialogTitle>

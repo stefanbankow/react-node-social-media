@@ -139,11 +139,11 @@ const NavbarLayout = (props) => {
   );
   const userButtons = (
     <div>
-      <IconButton size="large">
+      <IconButton>
         <NotificationsIcon />
       </IconButton>
       {/* <Link to={`/users/${props.username}`}></Link> */}
-      <IconButton onClick={handleUserMenuOpen} size="large">
+      <IconButton onClick={handleUserMenuOpen}>
         <AccountCircleIcon />
       </IconButton>
     </div>

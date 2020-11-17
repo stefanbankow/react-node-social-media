@@ -18,6 +18,8 @@ const useStyles = makeStyles({
 
 const Posts = (props) => {
   const classes = useStyles();
+  const { posts } = props;
+  useEffect(() => {}, [posts]);
 
   //Destructuring to pass only the onMount prop as a "dependency" to useEffect
   /*   if (props.posts) {
@@ -43,9 +45,10 @@ const Posts = (props) => {
           title={post.title}
           createdAt={post.createdAt}
           public={post.public}
-          author={post.author.username || props.user.username}
-          authorId={post.author._id || props.user._id}
+          author={props.user ? props.user.username : post.author.username}
+          authorId={props.user ? props.user._id : post.author._id}
           content={post.content}
+          likes={post.likes}
         />
       ))}
       {props.posts && props.posts.length === 0 && (
@@ -58,4 +61,10 @@ const Posts = (props) => {
   );
 };
 
-export default Posts;
+const mapStateToProps = (state) => {
+  return {
+    isLoading: state.posts.isLoading,
+  };
+};
+
+export default connect(mapStateToProps)(Posts);

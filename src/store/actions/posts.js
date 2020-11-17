@@ -7,6 +7,12 @@ export const initPostRequest = () => {
   };
 };
 
+export const postsReset = () => {
+  return {
+    type: actionTypes.POSTS_RESET,
+  };
+};
+
 export const closeFormReset = () => {
   return {
     type: actionTypes.CLOSE_POST_FORM_RESET,
@@ -130,6 +136,70 @@ export const deletePostAsync = (postId) => {
         dispatch(
           deletePostFailure(err.response ? err.response.data : err.message)
         );
+      });
+  };
+};
+//Liking util
+export const likeRequestInit = () => {
+  return {
+    type: actionTypes.LIKE_REQUEST_INIT,
+  };
+};
+
+//Liking
+export const likeSuccess = (newLike) => {
+  return {
+    type: actionTypes.LIKE_SUCCESS,
+    newLike,
+  };
+};
+export const likeFailure = (errors) => {
+  return {
+    type: actionTypes.LIKE_FAILURE,
+    errors,
+  };
+};
+
+export const likeAsync = (postId) => {
+  return (dispatch) => {
+    dispatch(likeRequestInit());
+    axios
+      .post(`/posts/${postId}/likes`)
+      .then((res) => {
+        dispatch(likeSuccess(res.data.newLike));
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch(likeFailure(err.response ? err.response.data : err));
+      });
+  };
+};
+
+//Unliking
+export const unlikeSuccess = (deletedLike) => {
+  return {
+    type: actionTypes.UNLIKE_SUCCESS,
+    deletedLike,
+  };
+};
+export const unlikeFailure = (errors) => {
+  return {
+    type: actionTypes.UNLIKE_FAILURE,
+    errors,
+  };
+};
+
+export const unlikeAsync = (postId) => {
+  return (dispatch) => {
+    dispatch(likeRequestInit());
+    axios
+      .delete(`/posts/${postId}/likes`)
+      .then((res) => {
+        dispatch(unlikeSuccess(res.data.deletedLike));
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch(unlikeFailure(err.response ? err.response.data : err));
       });
   };
 };

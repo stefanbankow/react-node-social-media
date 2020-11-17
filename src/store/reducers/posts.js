@@ -5,6 +5,7 @@ const initialState = {
   posts: null,
   errors: {},
   isLoading: false,
+  likeIsLoading: false,
   closeForm: false,
 };
 
@@ -15,6 +16,17 @@ const postReducer = (state = initialState, action) => {
         ...state,
         isLoading: true,
         closeForm: false,
+        errors: {},
+      };
+    case actionTypes.POSTS_RESET:
+      return {
+        ...state,
+        posts: null,
+      };
+    case actionTypes.LIKE_REQUEST_INIT:
+      return {
+        ...state,
+        likeIsLoading: true,
         errors: {},
       };
     case actionTypes.CLOSE_POST_FORM_RESET:
@@ -30,7 +42,9 @@ const postReducer = (state = initialState, action) => {
       };
 
     case actionTypes.CREATE_POST_SUCCESS:
+      //This if check is required in case the user creates a new post while on the drafts page
       if (state.posts) {
+        action.post.likes = [];
         return {
           ...state,
           posts: [action.post, ...state.posts],
@@ -90,6 +104,43 @@ const postReducer = (state = initialState, action) => {
         ...state,
         errors: action.errors,
         isLoading: false,
+      };
+    case actionTypes.LIKE_SUCCESS:
+      let updatedPosts = [...state.posts];
+      const likedPost = updatedPosts.find(
+        (post) => post._id === action.newLike.onPost
+      );
+
+      likedPost.likes.push(action.newLike);
+      return {
+        ...state,
+        likeIsLoading: false,
+        posts: updatedPosts,
+      };
+    case actionTypes.LIKE_FAILURE:
+      return {
+        ...state,
+        likeIsLoading: false,
+        errors: action.errors,
+      };
+    case actionTypes.UNLIKE_SUCCESS:
+      const updatedPosts2 = [...state.posts];
+      const unlikedPost = updatedPosts2.find(
+        (post) => post._id === action.deletedLike.onPost
+      );
+      unlikedPost.likes = unlikedPost.likes.filter(
+        (like) => like._id !== action.deletedLike._id
+      );
+      return {
+        ...state,
+        likeIsLoading: false,
+        posts: updatedPosts2,
+      };
+    case actionTypes.UNLIKE_FAILURE:
+      return {
+        ...state,
+        likeIsLoading: false,
+        errors: action.errors,
       };
     default:
       return state;

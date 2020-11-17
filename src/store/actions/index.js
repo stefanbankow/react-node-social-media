@@ -11,10 +11,13 @@ export {
   deleteDraftAsync,
 } from "./drafts";
 export {
+  postsReset,
   getPostsAsync,
   createPostAsync,
   updatePostAsync,
   deletePostAsync,
+  likeAsync,
+  unlikeAsync,
 } from "./posts";
 export {
   getCommentsAsync,
