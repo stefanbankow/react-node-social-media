@@ -11,8 +11,16 @@ likeRouter.post("/", auth, async (req, res) => {
     if (!post) {
       return res.status(404).json({ error: "No post with this id found" });
     }
+    const likeCheck = await Like.findOne({
+      onPost: req.params.postId,
+      by: req.user._id,
+    });
+    if (likeCheck) {
+      return res.status(400).json({ error: "Already liked" });
+    }
     const newLike = new Like({ onPost: req.params.postId, by: req.user._id });
     await newLike.save();
+    await newLike.populate("by").execPopulate();
     return res.json({ newLike });
   } catch (error) {
     console.error(error);

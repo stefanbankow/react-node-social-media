@@ -12,6 +12,8 @@ import {
   Menu,
   MenuItem,
   Fade,
+  ButtonBase,
+  Tooltip,
 } from "@material-ui/core";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,6 +30,8 @@ import ReactTimeAgo from "react-time-ago";
 import Comments from "../../Comments/Comments";
 import * as actions from "../../../store/actions/index";
 import PublishDraftConfirm from "./PublishDraftConfirm/PublishDraftConfirm";
+import { useEffect } from "react";
+import LikesDialog from "./LikesDialog/LikesDialog";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -75,6 +79,20 @@ const Post = (props) => {
   const [confirmPublishDraftOpen, setConfirmPublishDraftOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [updatePostOpen, setUpdatePostOpen] = useState(false);
+  const [likesOpen, setLikesOpen] = useState(false);
+  let isLikedByUser = null;
+  if (props.likes) {
+    isLikedByUser = props.likes.some((like) => like.by._id === props.userId);
+  }
+
+  const { posts } = props;
+  let currentPost = null;
+
+  if (posts) {
+    currentPost = posts.find((post) => post._id === props.id);
+  }
+
+  useEffect(() => {}, [currentPost]);
 
   const handleExpandComments = () => {
     setExpandedState((prevState) => {
@@ -112,11 +130,58 @@ const Post = (props) => {
     setConfirmDeleteOpen(false);
   };
 
+  const handleLikesOpen = () => {
+    setLikesOpen(true);
+  };
+
+  const handleLikesClose = () => {
+    setLikesOpen(false);
+  };
+
+  const handleLike = () => {
+    props.onLike(props.id);
+  };
+
+  const handleUnlike = () => {
+    props.onUnlike(props.id);
+  };
+
   const postButtons = (
     <React.Fragment>
-      <IconButton aria-label="like">
-        <Favorite color="primary" />
-      </IconButton>
+      <Tooltip
+        enterTouchDelay={!props.userId ? 0 : 1000}
+        title={
+          !props.userId ? "Sign in to like" : !isLikedByUser ? "Like" : "Unlike"
+        }
+      >
+        <IconButton
+          disabled={props.likeIsLoading}
+          onClick={props.userId && (isLikedByUser ? handleUnlike : handleLike)}
+          size="small"
+          aria-label="like"
+        >
+          <Favorite color={isLikedByUser ? "primary" : "disabled"} />
+        </IconButton>
+      </Tooltip>
+
+      <Tooltip title="See who likes this post">
+        <ButtonBase
+          onClick={handleLikesOpen}
+          style={{ marginLeft: 0, width: 25 }}
+        >
+          <Typography variant="subtitle1">
+            {props.likes && props.likes.length}
+          </Typography>
+        </ButtonBase>
+      </Tooltip>
+
+      <LikesDialog
+        dialogOpen={likesOpen}
+        handleClose={handleLikesClose}
+        likes={props.likes}
+      />
+
+      <div style={{ display: "block" }} />
 
       <div className={classes.grow} />
       <Button onClick={handleExpandComments} color="inherit">
@@ -265,12 +330,16 @@ const Post = (props) => {
 const mapStateToProps = (state) => {
   return {
     userId: state.auth.userId,
+    posts: state.posts.posts,
+    likeIsLoading: state.posts.likeIsLoading,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onGetComments: (postId) => dispatch(actions.getCommentsAsync(postId)),
+    onLike: (postId) => dispatch(actions.likeAsync(postId)),
+    onUnlike: (postId) => dispatch(actions.unlikeAsync(postId)),
   };
 };
 

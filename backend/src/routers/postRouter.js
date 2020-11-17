@@ -41,6 +41,10 @@ postRouter.get("/", async (req, res) => {
         path: "likes",
         select: "by",
         options: { sort: { createdAt: 1 } },
+        populate: {
+          path: "by",
+          select: "username",
+        },
       });
 
     return res.json({ posts });
@@ -48,13 +52,6 @@ postRouter.get("/", async (req, res) => {
     console.error(error);
     return res.status(500).json({ error });
   }
-});
-
-postRouter.get("/me", auth, async (req, res) => {
-  try {
-    const posts = await Post.find().populate("author");
-    return res.json({ posts });
-  } catch (error) {}
 });
 
 postRouter.get("/drafts", auth, async (req, res) => {

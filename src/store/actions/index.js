@@ -15,6 +15,8 @@ export {
   createPostAsync,
   updatePostAsync,
   deletePostAsync,
+  likeAsync,
+  unlikeAsync,
 } from "./posts";
 export {
   getCommentsAsync,

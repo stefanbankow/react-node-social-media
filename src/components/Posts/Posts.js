@@ -46,6 +46,7 @@ const Posts = (props) => {
           author={post.author.username || props.user.username}
           authorId={post.author._id || props.user._id}
           content={post.content}
+          likes={post.likes}
         />
       ))}
       {props.posts && props.posts.length === 0 && (

@@ -37,7 +37,21 @@ userRouter.get("/:username", async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    await user.populate("posts").execPopulate();
+    //The populates are getting pretty nested, which is something I do not like, but have to live with for now
+    await user
+      .populate({
+        path: "posts",
+        populate: {
+          path: "likes",
+          select: "by",
+          options: { sort: { createdAt: 1 } },
+          populate: {
+            path: "by",
+            select: "username",
+          },
+        },
+      })
+      .execPopulate();
     res.json({ user });
   } catch (error) {
     console.error(error);
