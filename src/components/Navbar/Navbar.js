@@ -153,7 +153,10 @@ const NavbarLayout = (props) => {
       <Toolbar>
         <Link
           className={classes.titleLink}
-          to={{ pathname: "/", state: { from: props.location } }}
+          to={{
+            pathname: "/",
+            state: { from: props.location },
+          }}
         >
           <ButtonBase component={Typography}>
             <Typography variant="h6" className={classes.title}>

@@ -71,7 +71,18 @@ UserSchema.virtual("posts", {
   },
   options: {
     sort: { createdAt: -1 },
+    limit: 10,
   },
+});
+
+UserSchema.virtual("postCount", {
+  ref: "Post",
+  localField: "_id",
+  foreignField: "author",
+  match: {
+    public: "true",
+  },
+  count: true,
 });
 
 UserSchema.path("email").validate(

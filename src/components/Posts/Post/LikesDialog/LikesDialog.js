@@ -27,7 +27,7 @@ const LikesDialog = (props) => {
           ) : (
             <List>
               {props.likes.map((like) => (
-                <ListItem>
+                <ListItem key={like._id}>
                   <ListItemAvatar>
                     <Avatar>L</Avatar>
                   </ListItemAvatar>

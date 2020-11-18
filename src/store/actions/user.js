@@ -41,7 +41,7 @@ export const getUserProfileAsync = (username) => {
       .then((res) => {
         dispatch(getUserProfileSuccess(res.data.user));
         //Setting the "posts" state as the posts of the user as to update them properly
-        dispatch(getPostsSuccess(res.data.user.posts));
+        dispatch(getPostsSuccess(res.data.user.posts, res.data.user.postCount));
       })
       .catch((error) => {
         console.error(error);

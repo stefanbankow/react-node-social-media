@@ -3,10 +3,12 @@ import clone from "rfdc";
 
 const initialState = {
   posts: null,
+  totalPostCount: 0,
   errors: {},
   isLoading: false,
   likeIsLoading: false,
   closeForm: false,
+  lastPostDate: null,
 };
 
 const postReducer = (state = initialState, action) => {
@@ -35,10 +37,21 @@ const postReducer = (state = initialState, action) => {
         closeForm: false,
       };
 
-    case actionTypes.GET_POSTS:
+    //Getting posts
+    case actionTypes.GET_POSTS_SUCCESS:
       return {
         ...state,
         posts: action.posts,
+        lastPostDate: action.posts[action.posts.length - 1].createdAt,
+        totalPostCount: action.postCount,
+      };
+
+    //Adding posts
+    case actionTypes.ADD_POSTS_SUCCESS:
+      return {
+        ...state,
+        posts: [...state.posts, ...action.posts],
+        lastPostDate: action.posts[action.posts.length - 1].createdAt,
       };
 
     case actionTypes.CREATE_POST_SUCCESS:
@@ -48,6 +61,7 @@ const postReducer = (state = initialState, action) => {
         return {
           ...state,
           posts: [action.post, ...state.posts],
+          totalPostCount: state.totalPostCount + 1,
           isLoading: false,
           closeForm: true,
         };
@@ -97,6 +111,7 @@ const postReducer = (state = initialState, action) => {
       return {
         ...state,
         posts: filteredPosts,
+        totalPostCount: state.totalPostCount - 1,
         isLoading: false,
       };
     case actionTypes.DELETE_POST_FAILURE:

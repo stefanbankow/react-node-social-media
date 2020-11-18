@@ -1,4 +1,4 @@
-# Social Media created with React and Node.js
+# Social Media Web App created with React and Node.js
 
 This is a project I have been working on for the past couple of weeks in order to improve my skills in the technologies and libraries listed in the [Technology Stack](#technology-stack) section.
 
@@ -74,30 +74,32 @@ It's possible that I am missing some, but those are the major ones.
 
 ## Features
 
-### Note
-The way the post and comment systems are currently set up, the performance of the site degrades gradually as more and more posts/comments are added.
-I plan on refactoring in order to send only a limited amount of posts/comments with each request and then request more based on user actions (scrolling to the end of current page)
 
 ### Currently available
 - Posts
   - CRUD functionality
+  - Only get 10 posts initially and request more as the user keeps scrolling down.
+    - This is kind of like `lazy loading` for posts, which makes the app far more efficient.
+
   - Drafts
     - Posts which are created with the `Public` checkbox ticked off are added to the drafts instead.
     - The drafts can be accessed at `/drafts`
     - The user can then choose to `publish`, `edit`, or `delete` a draft.
+- Likes
+  - Signed in users can `like/unlike` a post
+  - Everyone can see all users who likes a post
 - Comments
   - CRUD functionality
 - User system
   - Authentication
     - Authentication based on JWT tokens stored inside cookies and in the Database
     - This is by no means neither very complicated, nor very secure system, but it suits my needs
-  - Edit about info (has more work to be done)
+  - Edit about info [`Age, Country, About you`]
   - Change password by providing old password
 
 ### To do
 - Set up test for both the front- and back-end
 - Notifications
-- Likes
 - Profile pictures
 
 ### Backlog

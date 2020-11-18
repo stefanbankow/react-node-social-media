@@ -6,7 +6,6 @@ import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 import withError from "../../hoc/withError/withError";
 import axios from "axios";
-//import { Waypoint } from "react-waypoint";
 
 const useStyles = makeStyles({
   grow: {
@@ -27,26 +26,12 @@ const HomePage = (props) => {
     onMount();
   }, [onMount, postsReset]);
 
-  /*   const handleBottomReached = (e) => {
-    console.log("Bottom!");
-  };
-
-  const handleBottomLeft = (e) => {
-    console.log("No Bottom!");
-  }; */
-
   return (
     <div>
       <Grid container>
         <Grid style={{ flexGrow: 1 }} item sm={8}>
           {props.posts ? (
-            <React.Fragment>
-              <Posts posts={props.posts} />
-              {/* <Waypoint
-                onEnter={handleBottomReached}
-                onLeave={handleBottomLeft}
-              /> */}
-            </React.Fragment>
+            <Posts posts={props.posts} />
           ) : (
             <div style={{ textAlign: "center" }}>
               <CircularProgress size={90} className={classes.spinner} />
@@ -60,7 +45,9 @@ const HomePage = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { posts: state.posts.posts };
+  return {
+    posts: state.posts.posts,
+  };
 };
 const mapDispatchToProps = (dispatch) => {
   return {

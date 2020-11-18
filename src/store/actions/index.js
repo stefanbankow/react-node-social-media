@@ -13,6 +13,8 @@ export {
 export {
   postsReset,
   getPostsAsync,
+  addPostsAsync,
+  addUserPostsAsync,
   createPostAsync,
   updatePostAsync,
   deletePostAsync,

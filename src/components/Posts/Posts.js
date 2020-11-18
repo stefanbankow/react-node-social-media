@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Post from "./Post/Post";
 import { makeStyles } from "@material-ui/core/styles/";
-import axios from "axios";
-import { Typography } from "@material-ui/core";
-import withError from "../../hoc/withError/withError";
+import { CircularProgress, Typography } from "@material-ui/core";
+import { Waypoint } from "react-waypoint";
+import * as actions from "../../store/actions/index";
 
 const useStyles = makeStyles({
   spinner: {
@@ -35,6 +35,14 @@ const Posts = (props) => {
     ));
   } */
 
+  const handleBottomReached = (e) => {
+    if (props.user) {
+      props.onAddUserPosts(props.user._id, props.lastPostDate);
+    } else {
+      props.onAddPosts(props.lastPostDate);
+    }
+  };
+
   return (
     <div style={{ margin: "auto", textAlign: "center", width: "95%" }}>
       {props.posts.map((post) => (
@@ -51,6 +59,15 @@ const Posts = (props) => {
           likes={post.likes}
         />
       ))}
+      {props.posts.length < props.totalPostCount && (
+        <Waypoint onEnter={handleBottomReached}>
+          <Typography variant="h6">
+            <CircularProgress />
+            <div />
+            Loading more posts
+          </Typography>
+        </Waypoint>
+      )}
       {props.posts && props.posts.length === 0 && (
         <Typography className={classes.noPostsText} variant="h6">
           Sorry, there are no {props.areDrafts ? "drafts" : "posts"} to display
@@ -64,7 +81,17 @@ const Posts = (props) => {
 const mapStateToProps = (state) => {
   return {
     isLoading: state.posts.isLoading,
+    lastPostDate: state.posts.lastPostDate,
+    totalPostCount: state.posts.totalPostCount,
   };
 };
 
-export default connect(mapStateToProps)(Posts);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAddPosts: (lastPostDate) => dispatch(actions.addPostsAsync(lastPostDate)),
+    onAddUserPosts: (userId, lastPostDate) =>
+      dispatch(actions.addUserPostsAsync(userId, lastPostDate)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Posts);

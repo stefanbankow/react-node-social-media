@@ -51,6 +51,7 @@ userRouter.get("/:username", async (req, res) => {
           },
         },
       })
+      .populate("postCount")
       .execPopulate();
     res.json({ user });
   } catch (error) {

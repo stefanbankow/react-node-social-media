@@ -19,11 +19,19 @@ export const closeFormReset = () => {
   };
 };
 
-//Getting posts
-export const getPostsSuccess = (posts) => {
+//Getting posts initially
+export const getPostsSuccess = (posts, postCount) => {
   return {
-    type: actionTypes.GET_POSTS,
+    type: actionTypes.GET_POSTS_SUCCESS,
     posts,
+    postCount,
+  };
+};
+
+export const getPostsFailure = (errors) => {
+  return {
+    type: actionTypes.GET_POSTS_FAILURE,
+    errors,
   };
 };
 
@@ -32,7 +40,53 @@ export const getPostsAsync = () => {
     axios
       .get("/posts")
       .then((resData) => {
-        dispatch(getPostsSuccess(resData.data.posts));
+        dispatch(getPostsSuccess(resData.data.posts, resData.data.postCount));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+};
+
+//Adding posts after first post
+export const addPostsSuccess = (posts) => {
+  return {
+    type: actionTypes.ADD_POSTS_SUCCESS,
+    posts,
+  };
+};
+
+export const addPostsFailure = (errors) => {
+  return {
+    type: actionTypes.ADD_POSTS_FAILURE,
+    errors,
+  };
+};
+
+export const addPostsAsync = (lastPostDate) => {
+  //Using urlSearchParams to be sure the query is correct
+  const paramsString = `lastPostDate=${lastPostDate}`;
+  const queryParams = new URLSearchParams(paramsString);
+  return (dispatch) => {
+    axios
+      .get(`/posts?${queryParams.toString()}`)
+      .then((resData) => {
+        dispatch(addPostsSuccess(resData.data.posts));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+};
+
+export const addUserPostsAsync = (userId, lastPostDate) => {
+  const paramsString = `lastPostDate=${lastPostDate}`;
+  const queryParams = new URLSearchParams(paramsString);
+  return (dispatch) => {
+    axios
+      .get(`/posts/users/${userId}?${queryParams.toString()}`)
+      .then((resData) => {
+        dispatch(addPostsSuccess(resData.data.posts));
       })
       .catch((error) => {
         console.error(error);

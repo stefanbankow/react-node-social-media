@@ -98,7 +98,7 @@ const UserProfile = (props) => {
             <Grid item sm />
             <Grid style={{ flexGrow: 1 }} item sm={8}>
               {props.posts ? (
-                <Posts areUserPosts user={props.user} posts={props.posts} />
+                <Posts user={props.user} posts={props.posts} />
               ) : (
                 <CircularProgress />
               )}
