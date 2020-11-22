@@ -56,7 +56,7 @@ postRouter.get("/", async (req, res) => {
         options: { sort: { createdAt: 1 } }, //Not sure if the sort is required, but I'm using it just in case
         populate: {
           path: "by",
-          select: "username",
+          select: "username avatar",
         },
       });
 

@@ -55,6 +55,7 @@ const Posts = (props) => {
           public={post.public}
           author={props.user ? props.user.username : post.author.username}
           authorId={props.user ? props.user._id : post.author._id}
+          avatar={props.user ? props.user.avatar : post.author.avatar}
           content={post.content}
           likes={post.likes}
         />

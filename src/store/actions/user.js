@@ -122,3 +122,44 @@ export const updateUserPasswordAsync = (reqBody) => {
       });
   };
 };
+
+//Changing a profile picture
+export const chngProfPicSuccess = (imgBinary) => {
+  return {
+    type: actionTypes.CHANGE_PROFILE_PICTURE_SUCCESS,
+    imgBinary,
+  };
+};
+
+export const chngProfPicFailure = (errors) => {
+  return {
+    type: actionTypes.CHANGE_PROFILE_PICTURE_FAILURE,
+    errors,
+  };
+};
+
+export const changeProfilePictureAsync = (file) => {
+  return (dispatch) => {
+    dispatch(userRequestInit());
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    axios
+      .post("/users/profile_pic", formData, config)
+      .then((res) => {
+        dispatch(chngProfPicSuccess(res.data.avatar));
+        dispatch(closeFormReset());
+      })
+      .catch((error) => {
+        console.error(error);
+        dispatch(
+          chngProfPicFailure(error.response ? error.response.data : error)
+        );
+      });
+  };
+};

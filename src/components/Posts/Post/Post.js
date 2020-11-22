@@ -257,9 +257,11 @@ const Post = (props) => {
                 className={classes.usernameLink}
                 to={`/users/${props.author}`}
               >
-                <Avatar aria-label="user" className={classes.avatar}>
-                  P
-                </Avatar>{" "}
+                <Avatar
+                  aria-label="user"
+                  src={`data:image/jpeg;base64,${props.avatar}`}
+                  className={classes.avatar}
+                />
               </Link>
             }
             title={

@@ -2,6 +2,7 @@ export {
   getUserProfileAsync,
   updateUserAboutAsync,
   updateUserPasswordAsync,
+  changeProfilePictureAsync,
 } from "./user";
 export {
   getDraftsAsync,

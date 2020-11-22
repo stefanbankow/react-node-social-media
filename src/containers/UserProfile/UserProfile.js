@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
+  ButtonBase,
   CircularProgress,
   Grid,
   makeStyles,
@@ -15,15 +16,52 @@ import About from "../../components/Auth/User/About/About";
 import UserSettings from "../../components/Auth/User/UserSettings/UserSettings";
 import withError from "../../hoc/withError/withError";
 import Axios from "axios";
+import ImageDialog from "../../components/Auth/User/ImageDialog/ImageDialog";
 
 const useStyles = makeStyles(() => ({
   grow: {
     flexGrow: 1,
   },
-  avatar: {
+  avatarContainer: {
+    height: 175,
+    width: 175,
+    cursor: "pointer",
     margin: "15px auto",
+    position: "relative",
+
+    "&:hover $avatarOverlay": {
+      opacity: 0.5,
+    },
+    "&:hover $avatarOverlayText": {
+      opacity: 1,
+    },
+  },
+  avatarInputEl: { margin: "auto", display: "none" },
+  avatar: {
+    margin: "auto",
     width: 175,
     height: 175,
+  },
+  avatarOverlay: {
+    position: "absolute",
+    backgroundColor: "black",
+    top: "0%",
+    left: "0%",
+    height: "100%",
+    width: "100%",
+    transition: "opacity 0.5s ease",
+    opacity: 0,
+  },
+  avatarOverlayText: {
+    position: "absolute",
+    textAlign: "center",
+    color: "white",
+    top: "50%",
+    left: "50%",
+    width: "100%",
+    transform: "translate(-50%, -50%)",
+    transition: "opacity 0.5s ease",
+    opacity: 0,
   },
   spinner: {
     marginTop: 25,
@@ -37,10 +75,13 @@ const useStyles = makeStyles(() => ({
 }));
 const UserProfile = (props) => {
   const classes = useStyles();
+
   const { onMount, postsReset } = props;
+
   const { username } = props.match.params;
   const [aboutDialogOpen, setAboutDialogOpen] = useState(false);
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false);
+  const [imgDialogOpen, setImgDialogOpen] = useState(false);
 
   useEffect(() => {
     postsReset();
@@ -63,18 +104,45 @@ const UserProfile = (props) => {
     setSettingsDialogOpen(false);
   };
 
+  const handleImageDialogOpen = () => {
+    setImgDialogOpen(true);
+  };
+
+  const handleImageDialogClose = () => {
+    setImgDialogOpen(false);
+  };
+
   return (
     <div>
       {props.user ? (
         <div>
-          <Avatar className={classes.avatar}>U</Avatar>
+          <div
+            onClick={handleImageDialogOpen}
+            className={classes.avatarContainer}
+          >
+            <Avatar
+              className={classes.avatar}
+              src={`data:image/jpeg;base64,${props.user.avatar}`}
+            />
+            <Avatar className={classes.avatarOverlay}> </Avatar>
+            <h6 className={classes.avatarOverlayText}>
+              View{props.authUserId === props.user._id && "/Change"} profile
+              picture
+            </h6>
+          </div>
+          <ImageDialog
+            dialogOpen={imgDialogOpen}
+            handleClose={handleImageDialogClose}
+            avatarSrc={props.user.avatar}
+            userId={props.user._id}
+            authUserId={props.authUserId}
+          />
+
           <Typography className={classes.username} variant="h3">
             {props.match.params.username}
           </Typography>
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button onClick={handleAboutDialogOpen} variant="body1">
-              About
-            </Button>
+            <Button onClick={handleAboutDialogOpen}>About</Button>
             <About
               dialogOpen={aboutDialogOpen}
               handleClose={handleAboutDialogClosed}
@@ -84,9 +152,7 @@ const UserProfile = (props) => {
             />
             {props.user._id === props.authUserId && (
               <React.Fragment>
-                <Button onClick={handleSettingsDialogOpen} variant="body1">
-                  Settings
-                </Button>
+                <Button onClick={handleSettingsDialogOpen}>Settings</Button>
                 <UserSettings
                   dialogOpen={settingsDialogOpen}
                   handleClose={handleSettingsDialogClosed}
@@ -120,9 +186,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.user.user,
     authUserId: state.auth.userId,
-    isLoading: state.user.isLoading,
     errors: state.user.errors,
-    //Need posts in order to update the posts in a user's profile in real time
     posts: state.posts.posts,
   };
 };

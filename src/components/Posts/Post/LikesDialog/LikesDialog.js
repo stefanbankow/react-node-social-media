@@ -12,6 +12,7 @@ import {
   DialogContentText,
   Divider,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import React from "react";
 
 const LikesDialog = (props) => {
@@ -29,9 +30,17 @@ const LikesDialog = (props) => {
               {props.likes.map((like) => (
                 <ListItem key={like._id}>
                   <ListItemAvatar>
-                    <Avatar>L</Avatar>
+                    <Link to={`/users/${like.by.username}`}>
+                      <Avatar
+                        src={`data:image/jpeg;base64,${like.by.avatar}`}
+                      />
+                    </Link>
                   </ListItemAvatar>
-                  <ListItemText>{like.by.username}</ListItemText>
+                  <ListItemText>
+                    <Link to={`/users/${like.by.username}`}>
+                      {like.by.username}
+                    </Link>
+                  </ListItemText>
                   <Divider />
                 </ListItem>
               ))}

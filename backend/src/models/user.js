@@ -33,6 +33,9 @@ const UserSchema = new mongoose.Schema(
         } else return true;
       },
     },
+    avatar: {
+      type: Buffer,
+    },
     about: {
       type: String,
     },

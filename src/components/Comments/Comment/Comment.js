@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Card,
   CardContent,
   CardHeader,
   Divider,
@@ -80,9 +79,11 @@ const Comment = (props) => {
       <CardHeader
         avatar={
           <Link className={classes.usernameLink} to={`/users/${props.author}`}>
-            <Avatar aria-label="user" className={classes.avatar}>
-              P
-            </Avatar>{" "}
+            <Avatar
+              src={`data:image/jpeg;base64,${props.avatar}`}
+              aria-label="user"
+              className={classes.avatar}
+            />
           </Link>
         }
         title={
@@ -90,8 +91,6 @@ const Comment = (props) => {
             {props.author}
           </Link>
         }
-        //avatar={<Avatar>U</Avatar>}
-        //title={props.author}
         subheader={
           <ReactTimeAgo
             date={props.createdAt}

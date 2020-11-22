@@ -53,6 +53,8 @@ const Comments = (props) => {
                 key={comment._id}
                 id={comment._id}
                 author={comment.author.username}
+                authorId={comment.author._id}
+                avatar={comment.author.avatar}
                 createdAt={comment.createdAt}
                 content={comment.content}
                 postId={comment.onPost}

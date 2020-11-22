@@ -96,11 +96,15 @@ It's possible that I am missing some, but those are the major ones.
     - This is by no means neither very complicated, nor very secure system, but it suits my needs
   - Edit about info [`Age, Country, About you`]
   - Change password by providing old password
+  - Profile pictures `(In progress)`
+    - Because the project is still in development, I am storing profile pictures as `Buffers` in every user's MongoDB document and returning them in most responses. `This is incredibly inefficient and should not be used in production`, because it makes response sizes enormous. Because of this, the profile picture functionality is only available in the `profile-pictures` branch, which I do not plan on merging with `master` any time soon.
+    - The current functionality is very basic. Users are able to open a dialog in a user's profile page, which lets them see their profile picture. If the profile page they are on is their own profile, they are able to upload a new file and replace their current profile picture`(Accepting PNG/JPG/JPEG up to 1 mb)`. This, is `very lmited (for now)`, because users aren't able to `resize/crop` the image they've chosen and the result they get are the center `500x500 pixels` of the image they've uploaded.
+    - `For production`, the image uploaded would have to be stored in a storage bucket (Such as amazon s3) and only use MongoDB to store a reference to the image in the bucket, which would have very minimal API performance impact.
 
 ### To do
 - Set up test for both the front- and back-end
 - Notifications
-- Profile pictures
+
 
 ### Backlog
 - Email verification

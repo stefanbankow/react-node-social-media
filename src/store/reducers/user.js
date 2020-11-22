@@ -60,7 +60,21 @@ const userReducers = (state = initState, action) => {
         isLoading: false,
         errors: action.errors,
       };
-
+    case actionTypes.CHANGE_PROFILE_PICTURE_SUCCESS:
+      const newUser = { ...state.user };
+      newUser.avatar = action.imgBinary;
+      return {
+        ...state,
+        closeForm: true,
+        isLoading: false,
+        user: newUser,
+      };
+    case actionTypes.CHANGE_PROFILE_PICTURE_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        errors: { profilePic: action.errors.error },
+      };
     default:
       return state;
   }
