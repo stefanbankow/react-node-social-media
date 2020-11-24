@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import UserProfile from "./containers/UserProfile/UserProfile";
 import DraftsPage from "./containers/DraftsPage/DraftsPage";
 import NotFoundPage from "./containers/NotFoundPage/NotFoundPage";
+import TestPage from "./containers/TestPage/TestPage";
 
 const muiTheme = createMuiTheme({
   palette: {
@@ -46,7 +47,7 @@ function App(props) {
       <Switch>
         <Route exact path="/signup" component={SignupForm} />
         <Route exact path="/login" component={LoginForm} />
-        <Route exact path="/test" render={() => <h1>Test page</h1>} />
+        <Route exact path="/test" component={TestPage} />
         <Route exact path="/drafts" component={DraftsPage} />
         <Route path="/users/:username" component={UserProfile} />
         <Route exact path="/" component={HomePage} />

@@ -2,7 +2,11 @@ const express = require("express");
 const postRouter = require("./routers/postRouter");
 const userRouter = require("./routers/userRouter");
 const app = express();
+const http = require("http").createServer(app);
 
+const io = require("socket.io")(http);
+
+const mongoose = require("./db/mongoose");
 const cookieParser = require("cookie-parser");
 
 const port = process.env.PORT || 3001;
@@ -26,6 +30,12 @@ app.get("/", (req, res) => {
   res.json("Successfully sent request");
 });
 
-app.listen(port, () => {
-  console.log("Listening on " + port);
+io.on("connection", (socket) => {
+  console.log("A user connected");
+});
+
+mongoose.connection.once("open", () => {
+  http.listen(port, () => {
+    console.log("Listening on " + port);
+  });
 });
