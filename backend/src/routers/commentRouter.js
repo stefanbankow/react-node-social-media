@@ -1,6 +1,8 @@
 const express = require("express");
+const eventEmitter = require("../events/eventEmitter");
 const auth = require("../middleware/auth");
 const CommentOnPost = require("../models/comment");
+const Notification = require("../models/notification");
 
 const commentRouter = express.Router({ mergeParams: true });
 
@@ -67,7 +69,19 @@ commentRouter.delete("/:commentId", auth, async (req, res) => {
       return res.status(404).json({ error: "No comment with this id found" });
     }
 
-    return res.status(204).json({ deletedComment: commentToDelete });
+    const notificationToDelete = await Notification.findOneAndDelete({
+      by: req.user._id,
+      commentId: req.params.commentId,
+    });
+
+    notificationToDelete &&
+      eventEmitter.emit(
+        "delete one notification",
+        notificationToDelete._id,
+        notificationToDelete.to
+      );
+
+    return res.json({ deletedComment: commentToDelete });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error });

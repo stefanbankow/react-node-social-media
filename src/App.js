@@ -8,11 +8,20 @@ import SignupForm from "./components/Auth/SignupForm/SignupForm";
 import { Switch, Route } from "react-router-dom";
 import LoginForm from "./components/Auth/LoginForm/LoginForm";
 import { connect } from "react-redux";
-import { checkAuthAsync } from "./store/actions/index";
+import {
+  checkAuthAsync,
+  getNotificationsAsync,
+  newNotification,
+  readNotifications,
+  deleteOneNotification,
+  deleteNotifications,
+} from "./store/actions/index";
 import { useEffect } from "react";
 import UserProfile from "./containers/UserProfile/UserProfile";
 import DraftsPage from "./containers/DraftsPage/DraftsPage";
 import NotFoundPage from "./containers/NotFoundPage/NotFoundPage";
+import TestPage from "./containers/TestPage/TestPage";
+import io from "socket.io-client";
 
 const muiTheme = createMuiTheme({
   palette: {
@@ -31,11 +40,57 @@ const muiTheme = createMuiTheme({
   },
 });
 
+let socket = null;
+
 function App(props) {
-  const { onRefresh } = props;
+  const {
+    onRefresh,
+    onGetNotifications,
+    authUserId,
+    onNewNotification,
+    onReadNotifications,
+    onDeleteNotifications,
+    onDeleteOneNotification,
+  } = props;
+
   useEffect(() => {
     onRefresh();
-  }, [onRefresh]);
+
+    if (authUserId) {
+      onGetNotifications();
+      socket = io();
+      socket.on("connect", () => {
+        socket.emit("join room with userId", authUserId);
+      });
+
+      socket.on("newNotification", (notification) => {
+        onNewNotification(notification);
+      });
+
+      socket.on("read notifications", () => {
+        onReadNotifications();
+      });
+
+      socket.on("delete notifications", (notificationIds) => {
+        onDeleteNotifications(notificationIds);
+      });
+
+      socket.on("delete one notification", (notificationId) => {
+        onDeleteOneNotification(notificationId);
+      });
+    }
+    return () => {
+      socket && socket.disconnect();
+    };
+  }, [
+    onRefresh,
+    authUserId,
+    onGetNotifications,
+    onNewNotification,
+    onReadNotifications,
+    onDeleteNotifications,
+    onDeleteOneNotification,
+  ]);
 
   return (
     <ThemeProvider theme={muiTheme}>
@@ -46,7 +101,7 @@ function App(props) {
       <Switch>
         <Route exact path="/signup" component={SignupForm} />
         <Route exact path="/login" component={LoginForm} />
-        <Route exact path="/test" render={() => <h1>Test page</h1>} />
+        <Route exact path="/test" component={TestPage} />
         <Route exact path="/drafts" component={DraftsPage} />
         <Route path="/users/:username" component={UserProfile} />
         <Route exact path="/" component={HomePage} />
@@ -56,10 +111,24 @@ function App(props) {
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapStateToProps = (state) => {
   return {
-    onRefresh: () => dispatch(checkAuthAsync()),
+    authUserId: state.auth.userId,
   };
 };
 
-export default connect(null, mapDispatchToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onRefresh: () => dispatch(checkAuthAsync()),
+    onGetNotifications: () => dispatch(getNotificationsAsync()),
+    onNewNotification: (notification) =>
+      dispatch(newNotification(notification)),
+    onReadNotifications: () => dispatch(readNotifications()),
+    onDeleteOneNotification: (notificationId) =>
+      dispatch(deleteOneNotification(notificationId)),
+    onDeleteNotifications: (notificationIds) =>
+      dispatch(deleteNotifications(notificationIds)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

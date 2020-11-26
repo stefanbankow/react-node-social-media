@@ -11,10 +11,12 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import DraftsIcon from "@material-ui/icons/Drafts";
 import { Link, NavLink } from "react-router-dom";
-import { colors, Menu, MenuItem } from "@material-ui/core";
+import { Badge, colors, Menu, MenuItem } from "@material-ui/core";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 import ButtonBase from "@material-ui/core/ButtonBase";
+import Notifications from "../Notifications/Notifications";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -63,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 const NavbarLayout = (props) => {
   const classes = useStyles();
   const [userMenuAnchorEl, setUserMenuAnchorEl] = useState(null);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const handleUserMenuOpen = (event) => {
     setUserMenuAnchorEl(event.currentTarget);
@@ -80,6 +83,31 @@ const NavbarLayout = (props) => {
   const handleRedirectToDrafts = () => {
     props.history.push("/drafts");
     setUserMenuAnchorEl(null);
+  };
+
+  const handleNotificationsOpen = () => {
+    setNotificationsOpen(true);
+  };
+
+  const handleNotificationsClose = () => {
+    setNotificationsOpen(false);
+    if (
+      props.notifications &&
+      props.notifications.some((notification) => !notification.read)
+    ) {
+      const unreadNotificationIds = [];
+      props.notifications.forEach((notification) => {
+        !notification.read && unreadNotificationIds.push(notification._id);
+      });
+
+      Axios.patch("/notifications/read", {
+        notifications: unreadNotificationIds,
+      })
+        .then()
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   };
 
   const handleSignOut = () => {
@@ -140,7 +168,9 @@ const NavbarLayout = (props) => {
   const userButtons = (
     <div>
       <IconButton>
-        <NotificationsIcon />
+        <Badge color="secondary" badgeContent={props.unreadNotificationsCount}>
+          <NotificationsIcon onClick={handleNotificationsOpen} />
+        </Badge>
       </IconButton>
       {/* <Link to={`/users/${props.username}`}></Link> */}
       <IconButton onClick={handleUserMenuOpen}>
@@ -168,6 +198,10 @@ const NavbarLayout = (props) => {
         <div className={classes.grow}></div>
 
         {props.isAuthenticated ? userButtons : authButtons}
+        <Notifications
+          dialogOpen={notificationsOpen}
+          handleClose={handleNotificationsClose}
+        />
         {userMenu}
       </Toolbar>
     </AppBar>
@@ -180,6 +214,8 @@ const mapStateToProps = (state) => {
     isAuthenticated: state.auth.isAuthenticated,
     token: state.auth.token,
     username: state.auth.username,
+    notifications: state.notifications.notifications,
+    unreadNotificationsCount: state.notifications.unreadNotificationsCount,
   };
 };
 

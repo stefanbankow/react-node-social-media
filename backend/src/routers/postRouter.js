@@ -1,7 +1,9 @@
 const express = require("express");
+const eventEmitter = require("../events/eventEmitter");
 const auth = require("../middleware/auth");
 const CommentOnPost = require("../models/comment");
 const Like = require("../models/like");
+const Notification = require("../models/notification");
 const Post = require("../models/post");
 const commentRouter = require("./commentRouter");
 const likeRouter = require("./likeRouter");
@@ -189,7 +191,23 @@ postRouter.delete("/:id", auth, async (req, res) => {
 
     const likesToDelete = await Like.deleteMany({ onPost: postToDelete._id });
 
-    return res.status(204).json({
+    const notificationsToDelete = await Notification.find({
+      onPost: postToDelete._id,
+    });
+
+    if (notificationsToDelete) {
+      const notificationIds = notificationsToDelete.map(
+        (notification) => notification._id
+      );
+      await Notification.deleteMany({ onPost: postToDelete._id });
+      eventEmitter.emit(
+        "delete notifications",
+        [...notificationIds],
+        req.user._id
+      );
+    }
+
+    return res.json({
       deletedPost: postToDelete,
       deletedComments: commentsToDelete,
       deletedLikes: likesToDelete,
