@@ -13,7 +13,6 @@ import { connect } from "react-redux";
 
 const DeleteCommentConfirm = (props) => {
   const handleDelete = () => {
-    console.log(props.postId);
     props.onCommentDelete(props.postId, props.commentId);
   };
   return (

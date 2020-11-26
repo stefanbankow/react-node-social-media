@@ -1,6 +1,8 @@
 const express = require("express");
+const eventEmitter = require("../events/eventEmitter");
 const auth = require("../middleware/auth");
 const Like = require("../models/like");
+const Notification = require("../models/notification");
 const Post = require("../models/post");
 
 const likeRouter = express.Router({ mergeParams: true });
@@ -37,6 +39,19 @@ likeRouter.delete("/", auth, async (req, res) => {
     if (!likeToDelete) {
       return res.status(404).json({ error: "No like to delete" });
     }
+
+    const notificationToDelete = await Notification.findOneAndDelete({
+      by: req.user._id,
+      onPost: req.params.postId,
+    });
+
+    notificationToDelete &&
+      eventEmitter.emit(
+        "delete one notification",
+        notificationToDelete._id,
+        notificationToDelete.to
+      );
+
     return res.json({ deletedLike: likeToDelete });
   } catch (error) {
     console.error(error);

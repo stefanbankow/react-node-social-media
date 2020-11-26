@@ -5,6 +5,7 @@ import thunk from "redux-thunk";
 import userReducer from "./reducers/user";
 import commentReducer from "./reducers/comments";
 import draftsReducer from "./reducers/drafts";
+import notificationReducer from "./reducers/notifications";
 
 const rootReducer = combineReducers({
   posts: postReducer,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   comments: commentReducer,
+  notifications: notificationReducer,
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

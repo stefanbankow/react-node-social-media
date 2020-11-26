@@ -39,12 +39,15 @@ const postReducer = (state = initialState, action) => {
 
     //Getting posts
     case actionTypes.GET_POSTS_SUCCESS:
-      return {
-        ...state,
-        posts: action.posts,
-        lastPostDate: action.posts[action.posts.length - 1].createdAt,
-        totalPostCount: action.postCount,
-      };
+      if (action.postCount > 0) {
+        return {
+          ...state,
+          posts: action.posts,
+          lastPostDate: action.posts[action.posts.length - 1].createdAt,
+          totalPostCount: action.postCount,
+        };
+      }
+      return { ...state, posts: [] };
 
     //Adding posts
     case actionTypes.ADD_POSTS_SUCCESS:

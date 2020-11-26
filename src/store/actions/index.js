@@ -28,6 +28,14 @@ export {
   deleteCommentAsync,
 } from "./comments";
 export {
+  getNotificationsAsync,
+  addNotificationsAsync,
+  newNotification,
+  readNotifications,
+  deleteOneNotification,
+  deleteNotifications,
+} from "./notifications";
+export {
   checkAuthAsync,
   signUpUserAsync,
   signInUserAsync,
