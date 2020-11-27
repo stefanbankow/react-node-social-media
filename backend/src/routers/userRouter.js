@@ -11,6 +11,9 @@ const auth = require("../middleware/auth");
 
 //Routers
 const authRouter = require("./authRouter");
+const Like = require("../models/like");
+const Notification = require("../models/notification");
+
 const userRouter = express.Router();
 
 userRouter.use("", authRouter);
@@ -117,21 +120,25 @@ userRouter.delete("/", auth, async (req, res) => {
   try {
     //Wanted to do this all in "pre"/"post" methods in the models, but couldn't find a proper way to do it so I'm stuck with deleting them manually for now
 
+    const deletedLikes = await Like.deleteMany({ by: req.user._id });
+
+    const deletedNotifications = await Notification.deleteMany({
+      to: req.user._id,
+    }); //Since the user won't have access to the notification screen, there's no point in calling an event to remove them in frontend
+
+    const commentsToDelete = await CommentOnPost.deleteMany({
+      author: req.user._id,
+    });
     const deletedPosts = await Post.find({ author: req.user._id });
 
-    deletedPosts.forEach((post) => {
-      CommentOnPost.deleteMany({ onPost: post._id })
-        .then(() => {
-          return post.deleteOne();
-        })
-        .catch((error) => {
-          console.error(error);
-          return res.status(500).json({ error });
-        });
+    deletedPosts.forEach(async (post) => {
+      await CommentOnPost.deleteMany({ onPost: post._id });
+      await Like.deleteMany({ onPost: post._id });
+      await post.deleteOne();
     });
 
     const deletedUser = await User.findByIdAndDelete(req.user._id);
-    return res.json({ deletedUser });
+    return res.status(204).json({ deletedUser });
   } catch (error) {
     return res.status(500).json({ error });
   }

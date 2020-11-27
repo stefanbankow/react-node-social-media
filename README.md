@@ -9,7 +9,8 @@ The features currently available are pretty basic, but I hope I have the time an
 ## Demo
 
 I do not have a public production build set up and don't plan on making one anytime soon, so I decided to record a little video showcasing some of the features of the project.
- ### [Watch showcase here](https://www.youtube.com/watch?v=1NgSvF1UU8Q&feature=youtu.be&ab_channel=Bankov)
+ ### [Watch initial showcase here](https://www.youtube.com/watch?v=1NgSvF1UU8Q&feature=youtu.be&ab_channel=Bankov)
+ ### [Watch Likes + Notification showcase here](https://youtu.be/WUhsjtGoAr4)
 
 
 
@@ -64,7 +65,8 @@ npm run dev
   - [Material-UI](https://material-ui.com/)
 - [Node.js](https://nodejs.org/en/)
   - [Express](https://expressjs.com/)
-  - [Mongoose](https://mongoosejs.com/)
+  - [mongoose](https://mongoosejs.com/)
+  - [socket.io](https://socket.io/)
 - [Redux](https://redux.js.org/)
   - [redux-thunk](https://github.com/reduxjs/redux-thunk)
 - [MongoDB](https://www.mongodb.com/)
@@ -90,20 +92,26 @@ It's possible that I am missing some, but those are the major ones.
   - Everyone can see all users who likes a post
 - Comments
   - CRUD functionality
+- Notifications
+  - Displayed in `realtime` using `socket.io`
+  - Lazy-loaded 10 at a time `(once notification dialog is open)`
+  - Sends a notification everytime `another user` likes or comments on a post
+  - Notifications are deleted once a user unlikes or deletes a comment
+  - Showcased [here](https://youtu.be/WUhsjtGoAr4)
 - User system
   - Authentication
     - Authentication based on JWT tokens stored inside cookies and in the Database
     - This is by no means neither very complicated, nor very secure system, but it suits my needs
   - Edit about info [`Age, Country, About you`]
   - Change password by providing old password
-  - Profile pictures `(In progress)`
-    - Because the project is still in development, I am storing profile pictures as `Buffers` in every user's MongoDB document and returning them in most responses. `This is incredibly inefficient and should not be used in production`, because it makes response sizes enormous. Because of this, the profile picture functionality is only available in the `profile-pictures` branch, which I do not plan on merging with `master` any time soon.
+  - Profile pictures <code>(In progress, only available in [profile-pictures](https://github.com/stefanbankow/react-node-social-media/tree/profile-pictures) branch)</code>
+    - Because the project is still in development, I am storing profile pictures as `Buffers` in every user's MongoDB document and returning them in most responses. `This is incredibly inefficient and should not be used in production`, because it makes response sizes enormous. Because of this, the profile picture functionality is only available in the [`profile-pictures`](https://github.com/stefanbankow/react-node-social-media/tree/profile-pictures) branch, which I do not plan on merging with `master` any time soon.
     - The current functionality is very basic. Users are able to open a dialog in a user's profile page, which lets them see their profile picture. If the profile page they are on is their own profile, they are able to upload a new file and replace their current profile picture`(Accepting PNG/JPG/JPEG up to 1 mb)`. This, is `very lmited (for now)`, because users aren't able to `resize/crop` the image they've chosen and the result they get are the center `500x500 pixels` of the image they've uploaded.
     - `For production`, the image uploaded would have to be stored in a storage bucket (Such as amazon s3) and only use MongoDB to store a reference to the image in the bucket, which would have very minimal API performance impact.
 
 ### To do
-- Set up test for both the front- and back-end
-- Notifications
+- Set up tests for both the front- and back-end
+
 
 
 ### Backlog
