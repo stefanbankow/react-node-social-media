@@ -1,5 +1,4 @@
 import * as actionTypes from "../actions/actionTypes";
-import clone from "rfdc";
 
 const initialState = {
   posts: null,

@@ -1,6 +1,5 @@
 import {
   DialogContent,
-  DialogTitle,
   DialogActions,
   makeStyles,
   Typography,

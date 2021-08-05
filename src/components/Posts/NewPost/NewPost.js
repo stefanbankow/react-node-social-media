@@ -5,7 +5,6 @@ import AddIcon from "@material-ui/icons/Add";
 import { makeStyles } from "@material-ui/styles";
 
 import NewPostForm from "./NewPostForm/NewPostForm";
-import { Grow, Zoom } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   fixedPosition: {

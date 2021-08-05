@@ -7,11 +7,9 @@ import {
   DialogContentText,
   makeStyles,
   Typography,
-  CircularProgress,
 } from "@material-ui/core";
 import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import Axios from "axios";
 import { connect } from "react-redux";
 import React, { useState } from "react";
 import { useEffect } from "react";

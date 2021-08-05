@@ -9,7 +9,6 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import * as actions from "../../../store/actions/index";
-import { red } from "@material-ui/core/colors";
 import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles({

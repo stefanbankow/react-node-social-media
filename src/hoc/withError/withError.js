@@ -2,13 +2,11 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Typography,
   DialogActions,
   Button,
   Divider,
 } from "@material-ui/core";
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
 
 const withError = (WrappedComponent, axios) => {
   return class extends Component {

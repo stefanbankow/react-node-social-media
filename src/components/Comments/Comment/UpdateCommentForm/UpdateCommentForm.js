@@ -5,8 +5,6 @@ import {
   TextField,
   makeStyles,
   DialogActions,
-  FormControlLabel,
-  Checkbox,
   Button,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";

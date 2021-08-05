@@ -1,7 +1,6 @@
 import {
   ListItem,
   ListItemText,
-  Avatar,
   Divider,
   Slide,
   ListItemIcon,
